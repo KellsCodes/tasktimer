@@ -1,10 +1,14 @@
-import Image from "next/image";
+import Navbar from "./components/Navbar";
+import Register from "./components/Register";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+    <div className="font-sans min-h-screen">
+      <div className="h-[64px] flex flex-col items-center border-b border-b-gray-100 fixed top-0 w-full z-50">
+        <Navbar />
+      </div>
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <h1>Home page</h1>
+        {/* <Register /> */}
       </main>
     </div>
   );
