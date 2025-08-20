@@ -11,12 +11,12 @@ const Navbar = () => {
             </a>
             <ul className="flex space-x-4">
                 <li>
-                    <a href="/login" className="text-sm font-bold py-2 px-3 border rounded-[5px] text-gray-[#596878] w-[90px] text-center">
+                    <a href="/login" className="text-sm font-bold py-2 px-3 border border-[#23374C] hover:bg-[#23374C] hover:text-white transition-all duration-500 ease-in-out rounded-[5px] text-gray-[#596878] w-[90px] text-center">
                         Log In
                     </a>
                 </li>
                 <li>
-                    <a href="/register" className="text-sm font-bold py-2 px-3 bg-[#22D172] rounded-[5px] text-white w-[90px] text-center">
+                    <a href="/register" className="text-sm font-bold py-2 px-3 bg-[#22D172] hover:opacity-70 transition-all ease-in-out duration-500 rounded-[5px] text-white w-[90px] text-center">
                         Sign Up
                     </a>
                 </li>
