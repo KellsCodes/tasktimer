@@ -1,4 +1,5 @@
 'use client';
+import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
 import { GrLinkedin } from 'react-icons/gr';
@@ -16,6 +17,7 @@ const Register: React.FC = () => {
         email: '',
         password: '',
     });
+    const pathname = usePathname()
 
     const [error, setError] = useState<string | null>(null);
 
@@ -37,7 +39,7 @@ const Register: React.FC = () => {
 
     return (
         <form onSubmit={handleSubmit} className='space-y-3'>
-            <h2 className='font-bold text-4xl'>Log In</h2>
+            <h2 className='font-bold text-4xl'>{pathname === "/register" ? "Sign Up" : "Log In"}</h2>
             <p className='px-5 text-sm text-center'>By creating a TaskIt account, you agree to our <a href="#" className='text-[#759FF2]'>Terms of Service</a> and <a href="#" className='text-[#759FF2]'>Privacy Policy</a></p>
             <div className='space-y-3'>
                 <button
@@ -62,16 +64,19 @@ const Register: React.FC = () => {
             <div className='flex items-center justify-center font-bold text-gray-600 my-6'>OR</div>
             {error && <div style={{ color: 'red' }}>{error}</div>}
             <div>
-                {/* <label>
-                    Username:
-                    <input
-                        type="text"
-                        name="username"
-                        value={form.username}
-                        onChange={handleChange}
-                        autoComplete="username"
-                    />
-                </label> */}
+                {pathname === "/register" && (
+                    <label>
+                        Username:
+                        <input
+                            type="text"
+                            name="username"
+                            value={form.username}
+                            onChange={handleChange}
+                            autoComplete="username"
+                            className='w-full h-[50px] mt-1 border border-gray-300 rounded-[8px] px-3 focus:outline-none focus:ring-1 focus:ring-[#22D172] transition-all duration-500 ease-in-out'
+                        />
+                    </label>
+                )}
             </div>
             <div>
                 <label>
@@ -99,11 +104,27 @@ const Register: React.FC = () => {
                     />
                 </label>
             </div>
-            <button type="submit" className='cursor-pointer h-[50px] text-white font-bold hover:opacity-70 transition-all duration-300 ease-in-out w-full rounded-[8px] bg-[#22D172]'>Log In</button>
+            {pathname === "/register" &&
+                <div>
+                    <label>
+                        Confirmation:
+                        <input
+                            type="password"
+                            name="confirm_password"
+                            value={form.password}
+                            onChange={handleChange}
+                            autoComplete="new-password"
+                            className='w-full h-[50px] mt-1 border border-gray-300 rounded-[8px] px-3 focus:outline-none focus:ring-1 focus:ring-[#22D172] transition-all duration-500 ease-in-out'
+                        />
+                    </label>
+                </div>
+            }
+            <button type="submit" className='cursor-pointer h-[50px] text-white font-bold hover:opacity-70 transition-all duration-300 ease-in-out w-full rounded-[8px] bg-[#22D172]'>{pathname === "/register" ? "Sign Up" : "Log In"}</button>
             <div className='text-center text-sm mt-1'>
                 <p>Don't have an account yet?</p>
-                <a href="#" className='text-[#759FF2]'>Sign Up</a>
+                <a href="#" className='text-[#759FF2]'>{pathname === "/register" ? "Sign Up" : "Sign Up"}</a>
             </div>
+            
         </form>
     );
 };
