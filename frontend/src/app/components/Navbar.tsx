@@ -1,3 +1,5 @@
+
+
 const Navbar = () => {
     return (
         <nav className="flex items-center justify-between h-[64px] w-[60%]">
@@ -7,6 +9,7 @@ const Navbar = () => {
                     <div className="w-[20px] h-[20px] rounded-full bg-[#22D172]">
                         <div className="w-[10px] h-[13px] rounded-full bg-white"></div>
                     </div>
+
                 </div>
             </a>
             <ul className="flex space-x-4">

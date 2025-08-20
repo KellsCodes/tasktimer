@@ -100,6 +100,10 @@ const Register: React.FC = () => {
                 </label>
             </div>
             <button type="submit" className='cursor-pointer h-[50px] text-white font-bold hover:opacity-70 transition-all duration-300 ease-in-out w-full rounded-[8px] bg-[#22D172]'>Log In</button>
+            <div className='text-center text-sm mt-1'>
+                <p>Don't have an account yet?</p>
+                <a href="#" className='text-[#759FF2]'>Sign Up</a>
+            </div>
         </form>
     );
 };

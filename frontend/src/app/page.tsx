@@ -17,7 +17,7 @@ export default function Home() {
             </div>
             <div className="w-1/2">
               <Image src="/logo.svg" width={400} height={400} alt="Logo" />
-              <h2 className="font-bold text-xs">Time.It- schedule task, get notified, manage task, never miss any deadlines.</h2>
+              <h2 className="font-bold text-gray-900 text-xs">Time.It- schedule task, get notified, manage task, never miss any deadlines.</h2>
             </div>
           </div>
 
