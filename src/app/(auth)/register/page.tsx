@@ -16,6 +16,7 @@ export default function RegisterUser() {
                         <div className="w-1/2">
                             <Image src="/tired-man-missing-deadline-office.webp" width={800} height={800} loading="lazy" alt="deadline-image" />
                         </div>
+                        <div className="text-red-500">text me</div>
                     </div>
 
                 </div>
