@@ -9,7 +9,7 @@ export default function UserLogin() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
 
         <div className="relative top-[80px] w-full flex flex-col items-center py-10 px-20">
-          <div className=" w-[60%] mxto-auto flex items-center gap-x-30">
+          <div className=" w-[60%] mx-auto flex items-center gap-x-30">
             <div className="w-1/2">
               <Register />
             </div>

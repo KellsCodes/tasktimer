@@ -2,30 +2,24 @@
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
-import { GrLinkedin } from 'react-icons/gr';
-import { SiFacebook } from 'react-icons/si';
+// import { GrLinkedin } from 'react-icons/gr';
+// import { SiFacebook } from 'react-icons/si';
 
-interface RegisterFormData {
-    username: string;
-    email: string;
-    password: string;
-}
-
-const Register: React.FC = () => {
-    const [form, setForm] = useState<RegisterFormData>({
+const Register = () => {
+    const [form, setForm] = useState({
         username: '',
         email: '',
         password: '',
     });
     const pathname = usePathname()
 
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         // Add registration logic here
         if (!form.username || !form.email || !form.password) {
@@ -48,18 +42,18 @@ const Register: React.FC = () => {
                     <FcGoogle className='text-[22px]' />
                     Use Google account
                 </button>
-                <button
+                {/* <button
                     className='w-full flex items-center justify-center gap-x-3 h-[50px] border p-3 rounded-[6px] font-medium text-sm hover:bg-[#23374C] hover:text-white transition-all duration-500 ease-in-out cursor-pointer'
                 >
                     <SiFacebook className='text-[22px]' />
                     Use Facebook account
-                </button>
-                <button
+                </button> */}
+                {/* <button
                     className='w-full flex items-center justify-center gap-x-3 h-[50px] border p-3 rounded-[6px] font-medium text-sm hover:bg-[#23374C] hover:text-white transition-all duration-500 ease-in-out cursor-pointer'
                 >
                     <GrLinkedin className='text-[22px]' />
                     Use LinkedIn account
-                </button>
+                </button> */}
             </div>
             <div className='flex items-center justify-center font-bold text-gray-600 my-6'>OR</div>
             {error && <div style={{ color: 'red' }}>{error}</div>}
