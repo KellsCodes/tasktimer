@@ -42,7 +42,8 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --color-prim: #22D172
+  --color-prim: #22D172;
+  --color-sec: #23374C;
 }
 
 :root {

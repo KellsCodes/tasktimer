@@ -57,7 +57,7 @@ export default function ProfilePage() {
                     <label htmlFor="profession">Profession</label>
                     <Input
                         value={""}
-                        placeholder={`Profession e.g Blogger || Trader`}
+                        placeholder={`Profession e.g Analyst`}
                         className={`h-[50px] px-3 focus:outline-none focus:ring-1 focus:ring-prim transition-all duration-500 ease-in-out`}
                         name="profession"
                         id="profession"

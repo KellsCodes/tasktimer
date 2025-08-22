@@ -1,9 +1,9 @@
 import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
@@ -14,12 +14,19 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
+
 import { MdDashboardCustomize } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import AppLogo from "@/app/components/AppLogo";
+import { NavUser } from "./nav-user";
 
 // This is sample data.
 const data = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
   navMain: [
     {
       icon: <MdDashboardCustomize />,
@@ -80,6 +87,10 @@ export function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarRail />
+      {/* USER POPUP MENU */}
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
     </Sidebar>
   );
 }
