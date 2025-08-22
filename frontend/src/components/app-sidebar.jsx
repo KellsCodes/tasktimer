@@ -57,7 +57,7 @@ export function AppSidebar({
           <SidebarMenu>
             {data.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild className="h-[45px]">
                   <a href={item.url} className="font-medium">
                     {item.icon ? item.icon : ""}
                     {item.title}

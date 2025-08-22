@@ -1,10 +1,11 @@
+'use client';
 import { AppSidebar } from "@/components/app-sidebar"
 import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
-    BreadcrumbPage,
+    // BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button";
@@ -14,8 +15,10 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { usePathname } from 'next/navigation';
 
 export default function AuthLayout({ children }) {
+    const pathname = usePathname()
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -28,14 +31,14 @@ export default function AuthLayout({ children }) {
                             <Breadcrumb>
                                 <BreadcrumbList>
                                     <BreadcrumbItem className="hidden md:block">
-                                        <BreadcrumbLink href="#">
-                                            Dashboard
+                                        <BreadcrumbLink href={pathname}>
+                                            {pathname.replace('/', '').charAt(0).toUpperCase() + pathname.slice(2)}
                                         </BreadcrumbLink>
                                     </BreadcrumbItem>
                                     <BreadcrumbSeparator className="hidden md:block" />
-                                    <BreadcrumbItem>
+                                    {/* <BreadcrumbItem>
                                         <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                                    </BreadcrumbItem>
+                                    </BreadcrumbItem> */}
                                 </BreadcrumbList>
                             </Breadcrumb>
                         </div>
