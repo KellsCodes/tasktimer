@@ -1,1 +1,17 @@
 */node_modules
+*/.next
+*.log
+*.env
+*.DS_Store
+*.swp
+*.swo
+*.bak
+*.tmp
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.exe
+*.dll
+*.so

@@ -33,8 +33,11 @@ const Register = () => {
 
     return (
         <form onSubmit={handleSubmit} className='space-y-3'>
-            <h2 className='font-bold text-4xl'>{pathname === "/register" ? "Sign Up" : "Log In"}</h2>
-            <p className='px-5 text-sm text-center'>By creating a TaskIt account, you agree to our <a href="#" className='text-[#759FF2]'>Terms of Service</a> and <a href="#" className='text-[#759FF2]'>Privacy Policy</a></p>
+            <div className='space-y-6 mb-6'>
+                <h2 className='font-bold text-4xl'>{pathname === "/register" ? "Sign Up" : "Log In"}</h2>
+                <p className='px-5 text-sm text-center'>By creating a TaskIt account, you agree to our <a href="#" className='text-[#759FF2]'>Terms of Service</a> and <a href="#" className='text-[#759FF2]'>Privacy Policy</a></p>
+
+            </div>
             <div className='space-y-3'>
                 <button
                     className='w-full flex items-center justify-center gap-x-3 h-[50px] border p-3 rounded-[6px] font-medium text-sm hover:bg-[#23374C] hover:text-white transition-all duration-500 ease-in-out cursor-pointer'
@@ -118,7 +121,7 @@ const Register = () => {
                 <p>Don't have an account yet?</p>
                 <a href="#" className='text-[#759FF2]'>{pathname === "/register" ? "Sign Up" : "Sign Up"}</a>
             </div>
-            
+
         </form>
     );
 };
