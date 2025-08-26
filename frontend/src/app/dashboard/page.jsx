@@ -1,6 +1,10 @@
 import AuthLayout from "../components/AuthLayout";
+import { columns } from "./columns";
+import getData from "./data";
+import { DataTable } from "./data-table"
 
-export default function Page() {
+export default async function Page() {
+  const data = await getData();
   return (
     <AuthLayout>
       <div className="flex flex-1 flex-col gap-4 p-4">
@@ -9,7 +13,8 @@ export default function Page() {
           <div className="bg-muted/50 aspect-video rounded-xl" />
           <div className="bg-muted/50 aspect-video rounded-xl" />
         </div>
-        <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+        {/* <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" /> */}
+        <DataTable columns={columns} data={data} />
       </div>
     </AuthLayout>
   );
