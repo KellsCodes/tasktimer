@@ -2,7 +2,7 @@ import { MdFilterListAlt } from "react-icons/md";
 
 export default function SortTable() {
   return (
-    <div className="font-sans flex flex-col lg:flex-row lg:items-center justify-between w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div className="font-sans flex flex-col lg:flex-row lg:items-center justify-between w-full p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
       <form action="#" className="flex items-center justify-between  rounded-md w-full lg:w-[400px] mb-5 lg:mb-0">
         <input
           type="search"

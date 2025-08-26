@@ -34,11 +34,11 @@ export const columns = [
                 <div className={`p-1 flex items-center gap-x-1`}>
                     {
                         status === "Completed" ?
-                            <IoMdCheckbox className={`${colorClass} text-[19px]`} /> :
+                            <IoMdCheckbox className={`${colorClass} text-[17px]`} /> :
                             status === "Running" ?
-                                <MdOutlineIncompleteCircle className={`${colorClass} text-[19px]`} />
+                                <MdOutlineIncompleteCircle className={`${colorClass} text-[17px]`} />
                                 :
-                                <MdPending className={`${colorClass} text-[19px]`} />
+                                <MdPending className={`${colorClass} text-[17px]`} />
                     }
 
                     <span className={`text-xs`}>{status}</span>
