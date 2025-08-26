@@ -16,9 +16,12 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { usePathname } from 'next/navigation';
+import { DialogDemo } from "./Modal";
+import { useState } from "react";
 
 export default function AuthLayout({ children }) {
     const pathname = usePathname()
+    const [open, setOpenChange] = useState(false);
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -42,10 +45,16 @@ export default function AuthLayout({ children }) {
                                 </BreadcrumbList>
                             </Breadcrumb>
                         </div>
-                        <Button className={'bg-[#22D172] hover:bg-[#22D172] hover:opacity-60 transition-all duration-500 ease-in-out cursor-pointer'}>Add Task</Button>
+                        <Button
+                            className={'bg-prim hover:bg-prim hover:opacity-60 transition-all duration-500 ease-in-out cursor-pointer font-bold font-sans text-md'}
+                            onClick={() => { setOpenChange(true) }}
+                        >
+                            Add Task
+                        </Button>
                     </div>
                 </header>
                 {children}
+                <DialogDemo props={{ open: open, onOpenChange: () => { setOpenChange(prev => !prev) } }} />
             </SidebarInset>
         </SidebarProvider>
     );

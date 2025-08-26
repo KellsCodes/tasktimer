@@ -23,8 +23,8 @@ import { NavUser } from "./nav-user";
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "kellsCodes",
+    email: "kellyn@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
