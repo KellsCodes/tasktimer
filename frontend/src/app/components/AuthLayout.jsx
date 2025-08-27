@@ -55,9 +55,11 @@ export default function AuthLayout({ children }) {
                     </div>
                 </header>
                 {children}
-                <Modal props={{ open: open, onOpenChange: () => { setOpenChange(prev => !prev) } }}>
-                    <Tasks type="create" data={null} />
-                </Modal>
+                {open &&
+                    <Modal props={{ open: open, onOpenChange: () => { setOpenChange(prev => !prev) } }}>
+                        <Tasks type="create" data={null} />
+                    </Modal>
+                }
             </SidebarInset>
         </SidebarProvider>
     );
