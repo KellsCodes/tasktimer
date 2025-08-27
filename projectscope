@@ -5,7 +5,7 @@ Description:
 Requirements:
 1. Frontend (React, Tailwind)
 2. Backend (ExpressJS, JWTAuth, MySQL, CronJob, RabbitMQ)
-3. Container (Docker, Docker Compose(local dev)
+3. Container (Docker, Docker Compose(local dev))
 4. Orchestration (Kubernetes(kubernetes cronjob))
 ===========================================================>
 Design Specifications:
@@ -47,7 +47,7 @@ g. User should be able to Get task(s)
 3. Start date
 4. End date
 5. Create at date
-6. Reminder (Start date and time(24 hours and 30mins to start time, 1 hr to end)
+6. Reminder (Start date and time(24 hours and 30mins to start time, 1 hr to end))
 7. The create and update should be on a modal
 8. The delete and update btns should be on the actions column with tool tip
 =========================================

@@ -16,8 +16,9 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { usePathname } from 'next/navigation';
-import { DialogDemo } from "./Modal";
+import { Modal } from "./Modal";
 import { useState } from "react";
+import Tasks from "./tasks";
 
 export default function AuthLayout({ children }) {
     const pathname = usePathname()
@@ -54,7 +55,9 @@ export default function AuthLayout({ children }) {
                     </div>
                 </header>
                 {children}
-                <DialogDemo props={{ open: open, onOpenChange: () => { setOpenChange(prev => !prev) } }} />
+                <Modal props={{ open: open, onOpenChange: () => { setOpenChange(prev => !prev) } }}>
+                    <Tasks type="create" data={null} />
+                </Modal>
             </SidebarInset>
         </SidebarProvider>
     );
