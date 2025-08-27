@@ -1,10 +1,11 @@
+'use client';
 import { AppSidebar } from "@/components/app-sidebar"
 import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
-    BreadcrumbPage,
+    // BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button";
@@ -14,8 +15,14 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { usePathname } from 'next/navigation';
+import { Modal } from "./Modal";
+import { useState } from "react";
+import Tasks from "./tasks";
 
 export default function AuthLayout({ children }) {
+    const pathname = usePathname()
+    const [open, setOpenChange] = useState(false);
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -28,21 +35,31 @@ export default function AuthLayout({ children }) {
                             <Breadcrumb>
                                 <BreadcrumbList>
                                     <BreadcrumbItem className="hidden md:block">
-                                        <BreadcrumbLink href="#">
-                                            Dashboard
+                                        <BreadcrumbLink href={pathname}>
+                                            {pathname.replace('/', '').charAt(0).toUpperCase() + pathname.slice(2)}
                                         </BreadcrumbLink>
                                     </BreadcrumbItem>
                                     <BreadcrumbSeparator className="hidden md:block" />
-                                    <BreadcrumbItem>
+                                    {/* <BreadcrumbItem>
                                         <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                                    </BreadcrumbItem>
+                                    </BreadcrumbItem> */}
                                 </BreadcrumbList>
                             </Breadcrumb>
                         </div>
-                        <Button className={'bg-[#22D172] hover:bg-[#22D172] hover:opacity-60 transition-all duration-500 ease-in-out cursor-pointer'}>Add Task</Button>
+                        <Button
+                            className={'bg-prim hover:bg-prim hover:opacity-60 transition-all duration-500 ease-in-out cursor-pointer font-bold font-sans text-md'}
+                            onClick={() => { setOpenChange(true) }}
+                        >
+                            Add Task
+                        </Button>
                     </div>
                 </header>
                 {children}
+                {open &&
+                    <Modal props={{ open: open, onOpenChange: () => { setOpenChange(prev => !prev) } }}>
+                        <Tasks type="create" data={null} />
+                    </Modal>
+                }
             </SidebarInset>
         </SidebarProvider>
     );
