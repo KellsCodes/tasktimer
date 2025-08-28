@@ -8,7 +8,16 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { MdOutlineIncompleteCircle, MdPending } from "react-icons/md"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { MdCancel, MdOutlineIncompleteCircle, MdPending } from "react-icons/md"
 import { IoMdCheckbox } from "react-icons/io"
 
 
@@ -22,6 +31,7 @@ export const getColumns = (handleOpenModal) => {
             accessorKey: "status",
             header: "Status",
             cell: ({ row }) => {
+                const data = row.original // row data
                 const status = row.getValue("status")
                 let colorClass = "text-gray-500"
                 if (status === "Completed") {
@@ -32,18 +42,44 @@ export const getColumns = (handleOpenModal) => {
                     colorClass = "text-yellow-500"
                 }
                 return (
-                    <div className={`p-1 flex items-center gap-x-1`}>
-                        {
-                            status === "Completed" ?
-                                <IoMdCheckbox className={`${colorClass} text-[17px]`} /> :
-                                status === "Running" ?
-                                    <MdOutlineIncompleteCircle className={`${colorClass} text-[17px]`} />
-                                    :
-                                    <MdPending className={`${colorClass} text-[17px]`} />
-                        }
+                    <>
+                        {status === "Completed" ?
+                            <div className={`p-1 flex items-center gap-x-1`}>
+                                {
+                                    status === "Completed" ?
+                                        <IoMdCheckbox className={`${colorClass} text-[17px]`} /> :
+                                        status === "Running" ?
+                                            <MdOutlineIncompleteCircle className={`${colorClass} text-[17px]`} />
+                                            :
+                                            <MdPending className={`${colorClass} text-[17px]`} />
+                                }
 
-                        <span className={`text-xs`}>{status}</span>
-                    </div>
+                                <span className={`text-xs`}>{status}</span>
+                            </div> :
+                            <>
+                                <Select defaultValue={status}>
+                                    <SelectTrigger className="w-full lg:w-[155px]">
+                                        <SelectValue placeholder="Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Pending">
+                                            <MdPending className={`text-yellow-500 text-[17px]`} /> Pending
+                                        </SelectItem>
+                                        <SelectItem value="Completed">
+                                            <IoMdCheckbox className={`text-prim text-[17px]`} /> Completed
+                                        </SelectItem>
+                                        <SelectItem value="Running">
+                                            <MdOutlineIncompleteCircle className={`text-blue-500 text-[17px]`} /> Running
+                                        </SelectItem>
+                                        <SelectItem value="Canceled">
+                                            <MdCancel className={`text-[17px]`} /> Canceled
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                
+                            </>
+                        }
+                    </>
                 )
             }
         },
