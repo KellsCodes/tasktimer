@@ -1,4 +1,5 @@
 */node_modules
+<<<<<<< HEAD
 */.next
 *.log
 *.env
@@ -15,3 +16,6 @@
 *.exe
 *.dll
 *.so
+=======
+backend/.env
+>>>>>>> backend
