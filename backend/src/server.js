@@ -1,12 +1,24 @@
-const express = require('express');
-const app = express();
-const port = 8080;
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
-// Define a route for GET requests to the root URL
-app.get('/', (req, res)=> {
-	res.send('Hello World from Express');
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 8080;
+
+// Middlewares
+app.use(express.json());
+app.use(cors());
+
+// Routes
+app.get("/", (req, res) => {
+  res.send("Hello from Express..");
 });
 
-app.listen(port, ()=> {
-	console.log(`Example app listening at http://localhost:${port}`)
-})
+// Error handling middleware
+
+// Server running
+app.listen(port, () => {
+  console.log(`app listening at http://localhost:${port}`);
+});
