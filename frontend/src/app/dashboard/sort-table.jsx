@@ -37,7 +37,7 @@ export default function SortTable() {
 
       <div className="w-full lg:w-auto flex flex-col lg:flex-row items-center gap-x-2 gap-y-3 lg:gap-y-0">
         <Select>
-          <SelectTrigger className="w-full lg:w-[180px]">
+          <SelectTrigger className="w-full lg:w-[150px]">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>

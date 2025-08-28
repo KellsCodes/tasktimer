@@ -10,7 +10,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { MdOutlineIncompleteCircle, MdPending } from "react-icons/md"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { MdCancel, MdOutlineIncompleteCircle, MdPending } from "react-icons/md"
 import { IoMdCheckbox } from "react-icons/io"
 
 
@@ -49,61 +56,28 @@ export const getColumns = (handleOpenModal) => {
 
                                 <span className={`text-xs`}>{status}</span>
                             </div> :
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <button className={`p-1 flex items-center gap-x-1 focus:outline-none cursor-pointer`}>
-                                        {
-                                            status === "Running" ?
-                                                <MdOutlineIncompleteCircle className={`${colorClass} text-[17px]`} />
-                                                :
-                                                <MdPending className={`${colorClass} text-[17px]`} />
-                                        }
-                                        <span className={`text-xs`}>{status}</span>
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <RadioGroup defaultValue={`${status}`}>
-                                        <DropdownMenuItem onClick={() => {
-                                            // console.log("Edit:", data)
-                                            // handleOpenModal(data)
-                                        }}
-                                        >
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="Pending" id="Pending" />
-                                                <Label htmlFor="Pending">Pending</Label>
-                                            </div>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                            onClick={() => console.log("Delete:", data.id)}
-                                            className=""
-                                        >
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="Running" id="Running" />
-                                                <Label htmlFor="Running">In Progress</Label>
-                                            </div>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                            onClick={() => console.log("Delete:", data.id)}
-                                            className=""
-                                        >
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="Completed" id="Completed" />
-                                                <Label htmlFor="Completed">Completed</Label>
-                                            </div>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                            onClick={() => console.log("Delete:", data.id)}
-                                            className=""
-                                        >
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="Cancel" id="Cancel" />
-                                                <Label htmlFor="Cancel">Cancel</Label>
-                                            </div>
-                                        </DropdownMenuItem>
-
-                                    </RadioGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <>
+                                <Select defaultValue={status}>
+                                    <SelectTrigger className="w-full lg:w-[155px]">
+                                        <SelectValue placeholder="Status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Pending">
+                                            <MdPending className={`text-yellow-500 text-[17px]`} /> Pending
+                                        </SelectItem>
+                                        <SelectItem value="Completed">
+                                            <IoMdCheckbox className={`text-prim text-[17px]`} /> Completed
+                                        </SelectItem>
+                                        <SelectItem value="Running">
+                                            <MdOutlineIncompleteCircle className={`text-blue-500 text-[17px]`} /> Running
+                                        </SelectItem>
+                                        <SelectItem value="Canceled">
+                                            <MdCancel className={`text-[17px]`} /> Canceled
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                
+                            </>
                         }
                     </>
                 )
