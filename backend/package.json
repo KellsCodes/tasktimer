@@ -4,11 +4,12 @@
     "start": "bun src/server.js"
   },
   "dependencies": {
+    "@prisma/client": "^6.15.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "joi": "^18.0.1",
-    "mysql2": "^3.14.3"
+    "prisma": "^6.15.0"
   },
   "name": "backend",
   "version": "1.0.0",
