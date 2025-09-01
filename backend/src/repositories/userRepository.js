@@ -17,3 +17,9 @@ export const getUserById = async (id) => {
     where: { id },
   });
 };
+
+export const createToken = async (tokenData) => {
+  return await prisma.refreshToken.create({
+    ...tokenData,
+  });
+};

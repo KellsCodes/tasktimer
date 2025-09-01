@@ -24,6 +24,7 @@ model User {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   profile     Profile?
+  token      RefreshToken[]
 }
 
 model Profile {
@@ -33,5 +34,16 @@ model Profile {
   profession    String? @db.VarChar(15)
   profileImage  String? @db.VarChar(255)
   userId        Int     @unique
-  user          User    @relation(fields: [userId], references: [id])   
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)   
+}
+
+model RefreshToken {
+  id              Int       @id @default(autoincrement())
+  refreshToken    String    @unique @db.VarChar(256)
+  expiresAt       DateTime
+  revoked         Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  userId          Int
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -38,11 +38,12 @@ export const login = async (req, res) => {
         .status(401)
         .json({ code: 2, message: "Invalid email or password" });
     }
-    const { id, email: useremail, username } = user;
     res.status(200).json({
       code: 1,
       message: "Login successful",
-      user: { id, email: useremail, username },
+      user: user.user,
+      accesToken: user.accessToken,
+      refreshToken: user.refreshToken,
     });
   } catch (error) {
     res.status(500).json({ code: 2, message: error.message });

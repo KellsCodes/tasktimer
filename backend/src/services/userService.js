@@ -1,4 +1,9 @@
-import { createUser, getUserByEmail } from "../repositories/userRepository.js";
+import { generateAccessToken, generateRefreshToken } from "../config/jwt.js";
+import {
+  createToken,
+  createUser,
+  getUserByEmail,
+} from "../repositories/userRepository.js";
 
 import bcrypt from "bcrypt";
 
@@ -32,8 +37,22 @@ export const loginUser = async (email, password) => {
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
-  if (isMatch) {
-    return user;
-  }
-  return { code: 2, message: "Invalid email or password" };
+  if (!isMatch) return { code: 2, message: "Invalid email or password" };
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
+
+  // Save refresh token in DB for invalidation support
+  await createToken({
+    data: {
+      refreshToken: refreshToken,
+      userId: user.id,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // expires in 7 days
+    },
+  });
+
+  return {
+    accessToken,
+    refreshToken,
+    user: { id: user.id, email: user.email, username: user.username },
+  };
 };
