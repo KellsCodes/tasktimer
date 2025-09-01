@@ -1,3 +1,4 @@
+import { verifyEmail } from "../repositories/userRepository.js";
 import { loginUser, registerUser } from "../services/userService.js";
 
 import { loginSchema, userSchema } from "../validations/userValidations.js";
@@ -38,6 +39,9 @@ export const login = async (req, res) => {
         .status(401)
         .json({ code: 2, message: "Invalid email or password" });
     }
+    if (user.code === 3) {
+      return res.status(201).json({ code: 3, message: user.message });
+    }
     res.status(200).json({
       code: 1,
       message: "Login successful",
@@ -50,5 +54,13 @@ export const login = async (req, res) => {
   }
 };
 
-
-// export const generateEmailVerificationToken
+export const emailVerification = async (req, res) => {
+  const token = req.body;
+  const response = await verifyEmail(token);
+  if (response.code === 1) {
+    return res.status(200).json({ ...response });
+  } else if (response.code === 2) {
+    return res.status(400).json({ ...response });
+  }
+  return res.status(500).json({ ...response });
+};

@@ -28,6 +28,7 @@ export const registerUser = async (userData) => {
     email,
     password: hashedPassword,
   });
+  // Send email verification token
   const emailToken = await generateEmailToken(newUser.id);
   // console.log({ emailToken });
   return { id: newUser.id, email: newUser.email, username: newUser.username };
@@ -41,6 +42,11 @@ export const loginUser = async (email, password) => {
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return { code: 2, message: "Invalid email or password" };
+  // Send email verification token
+  if (!user.verifiedAt) {
+    const emailToken = await generateEmailToken(user.id);
+    return { code: 3, message: "Email verifiction required.", emailToken };
+  }
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
@@ -64,7 +70,7 @@ const generateEmailToken = async (userId) => {
   const verificationToken = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // expires in 1hr
   const data = await emailVerificationToken({
-    emailVerificationToken: verificationToken,
+    token: verificationToken,
     expiresAt,
     userId,
   });

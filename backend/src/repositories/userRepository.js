@@ -29,3 +29,41 @@ export const emailVerificationToken = async (tokenData) => {
     data: { ...tokenData },
   });
 };
+
+export const verifyEmail = async ({ token }) => {
+  try {
+    if (!token || typeof token !== "string") {
+      return { code: 2, message: "Invalid or missing token." };
+    }
+
+    const tokenRecord = await prisma.emailVerificationToken.findUnique({
+      where: { token },
+    });
+
+    if (!tokenRecord) {
+      return { code: 2, message: "Invalid or missing token." };
+    }
+
+    if (tokenRecord.isUsed) {
+      return { code: 2, message: "Token already used." };
+    }
+
+    if (new Date() > tokenRecord.expiresAt) {
+      return { code: 2, message: "Token expired" };
+    }
+
+    return await prisma.$transaction(async (tx) => {
+      await tx.emailVerificationToken.update({
+        where: { token },
+        data: { isUsed: true, expiresAt: new Date() },
+      });
+      await tx.user.update({
+        where: { id: tokenRecord.userId },
+        data: { verifiedAt: new Date() },
+      });
+      return { code: 1, message: "Email successfully verified" };
+    });
+  } catch (error) {
+    return { code: 0, message: "Internal server error", error };
+  }
+};

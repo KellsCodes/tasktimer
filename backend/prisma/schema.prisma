@@ -25,7 +25,7 @@ model User {
   updatedAt   DateTime  @updatedAt
   profile     Profile?
   token       RefreshToken[]
-  emailVerification  EmailVerificationToken[]
+  emailToken  EmailVerificationToken[]
 }
 
 model Profile {
@@ -51,7 +51,7 @@ model RefreshToken {
 
 model EmailVerificationToken {
   id                       Int        @id @default(autoincrement())
-  emailVerificationToken   String     @unique  @db.VarChar(256)
+  token                    String     @unique  @db.VarChar(256)
   userId                   Int
   user                     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   isUsed                   Boolean   @default(false)
