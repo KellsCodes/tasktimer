@@ -23,4 +23,15 @@ model User {
   verifiedAt  DateTime? // null until verified
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  profile     Profile?
+}
+
+model Profile {
+  id            Int @id @default(autoincrement())
+  firstname     String? @db.VarChar(15)
+  lastname      String? @db.VarChar(15)
+  profession    String? @db.VarChar(15)
+  profileImage  String? @db.VarChar(255)
+  userId        Int     @unique
+  user          User    @relation(fields: [userId], references: [id])   
 }
