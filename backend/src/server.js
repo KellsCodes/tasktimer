@@ -3,15 +3,21 @@ import express from "express";
 import cors from "cors";
 import routesGroup from "./routes/routes.js";
 import { connectDB } from "./config/db.js";
+import { Router } from "express";
 
 const app = express();
 const port = process.env.PORT || 8080;
+const router = Router();
 
 // Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Routes
+app.get("/", (req, res) => {
+  res.send("Hello from time.it..");
+});
 routesGroup(app);
 
 // Error handling middleware
