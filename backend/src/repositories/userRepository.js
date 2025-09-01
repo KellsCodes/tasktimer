@@ -23,3 +23,9 @@ export const createToken = async (tokenData) => {
     ...tokenData,
   });
 };
+
+export const emailVerificationToken = async (tokenData) => {
+  return await prisma.emailVerificationToken.create({
+    data: { ...tokenData },
+  });
+};

@@ -49,3 +49,6 @@ export const login = async (req, res) => {
     res.status(500).json({ code: 2, message: error.message });
   }
 };
+
+
+// export const generateEmailVerificationToken

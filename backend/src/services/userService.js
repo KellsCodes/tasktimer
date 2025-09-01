@@ -2,10 +2,12 @@ import { generateAccessToken, generateRefreshToken } from "../config/jwt.js";
 import {
   createToken,
   createUser,
+  emailVerificationToken,
   getUserByEmail,
 } from "../repositories/userRepository.js";
 
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 export const registerUser = async (userData) => {
   const { username, email, password } = userData;
@@ -26,8 +28,9 @@ export const registerUser = async (userData) => {
     email,
     password: hashedPassword,
   });
-
-  return newUser;
+  const emailToken = await generateEmailToken(newUser.id);
+  // console.log({ emailToken });
+  return { id: newUser.id, email: newUser.email, username: newUser.username };
 };
 
 export const loginUser = async (email, password) => {
@@ -55,4 +58,15 @@ export const loginUser = async (email, password) => {
     refreshToken,
     user: { id: user.id, email: user.email, username: user.username },
   };
+};
+
+const generateEmailToken = async (userId) => {
+  const verificationToken = crypto.randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // expires in 1hr
+  const data = await emailVerificationToken({
+    emailVerificationToken: verificationToken,
+    expiresAt,
+    userId,
+  });
+  return data;
 };

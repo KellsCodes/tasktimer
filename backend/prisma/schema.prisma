@@ -24,7 +24,8 @@ model User {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   profile     Profile?
-  token      RefreshToken[]
+  token       RefreshToken[]
+  emailVerification  EmailVerificationToken[]
 }
 
 model Profile {
@@ -46,4 +47,15 @@ model RefreshToken {
   updatedAt       DateTime  @updatedAt
   userId          Int
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmailVerificationToken {
+  id                       Int        @id @default(autoincrement())
+  emailVerificationToken   String     @unique  @db.VarChar(256)
+  userId                   Int
+  user                     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isUsed                   Boolean   @default(false)
+  expiresAt                DateTime
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
 }
