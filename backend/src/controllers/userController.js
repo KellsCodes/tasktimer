@@ -70,6 +70,7 @@ export const emailVerification = async (req, res) => {
 };
 
 export const logOut = async (req, res) => {
+  // return req.body
   const { refreshToken } = req.body;
   const { statusCode, result } = await userLogOut(refreshToken);
   return res.status(statusCode).json(result);
