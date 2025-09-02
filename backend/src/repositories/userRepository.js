@@ -72,3 +72,23 @@ export const verifyEmail = async ({ token }) => {
     return { code: 0, message: "Internal server error", error };
   }
 };
+
+export const logOutUser = async (refreshToken) => {
+  const token = await prisma.refreshToken.findUnique({
+    where: { refreshToken },
+  });
+  if (!token) {
+    return {
+      result: { code: 2, message: "Invalid refreshToken" },
+      statusCode: 403,
+    };
+  }
+  await prisma.refreshToken.update({
+    where: { refreshToken },
+    data: { revoked: true },
+  });
+  return {
+    result: { code: 1, message: "Logged out successfully" },
+    statusCode: 200,
+  };
+};

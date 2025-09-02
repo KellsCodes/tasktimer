@@ -1,5 +1,9 @@
 import { verifyEmail } from "../repositories/userRepository.js";
-import { loginUser, registerUser } from "../services/userService.js";
+import {
+  loginUser,
+  registerUser,
+  userLogOut,
+} from "../services/userService.js";
 
 import { loginSchema, userSchema } from "../validations/userValidations.js";
 
@@ -63,4 +67,10 @@ export const emailVerification = async (req, res) => {
     return res.status(400).json({ ...response });
   }
   return res.status(500).json({ ...response });
+};
+
+export const logOut = async (req, res) => {
+  const { refreshToken } = req.body;
+  const { statusCode, result } = await userLogOut(refreshToken);
+  return res.status(statusCode).json(result);
 };

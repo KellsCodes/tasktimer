@@ -4,6 +4,7 @@ import {
   createUser,
   emailVerificationToken,
   getUserByEmail,
+  logOutUser,
 } from "../repositories/userRepository.js";
 
 import bcrypt from "bcrypt";
@@ -77,4 +78,22 @@ const generateEmailToken = async (userId) => {
     userId,
   });
   return data;
+};
+
+export const userLogOut = async (refreshToken) => {
+  try {
+    if (!refreshToken) {
+      return {
+        result: { code: 2, message: "Invalid refreshToken" },
+        statusCode: 404,
+      };
+    }
+    // Delete the refreshToken
+    return await logOutUser(refreshToken);
+  } catch (error) {
+    return {
+      result: { code: 3, message: "Internal server error", error },
+      statusCode: 500,
+    };
+  }
 };
