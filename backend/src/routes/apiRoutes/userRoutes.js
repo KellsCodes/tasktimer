@@ -1,13 +1,14 @@
 import { Router } from "express";
+import {
+  emailVerification,
+  login,
+  register,
+} from "../../controllers/userController.js";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.send("Hello from Express..");
-});
-
-router.get("/users", (req, res) => {
-  res.json({ users: ["Nikel", "Aioc"] });
-});
+router.post("/register", register);
+router.post("/login", login);
+router.post("/verify-email", emailVerification);
 
 export default router;
