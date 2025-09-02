@@ -8,6 +8,7 @@ import {
 
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import { sendVerificationEmail } from "./mail.service.js";
 
 export const registerUser = async (userData) => {
   const { username, email, password } = userData;
@@ -30,7 +31,7 @@ export const registerUser = async (userData) => {
   });
   // Send email verification token
   const emailToken = await generateEmailToken(newUser.id);
-  // console.log({ emailToken });
+  await sendVerificationEmail(newUser, emailToken.token);
   return { id: newUser.id, email: newUser.email, username: newUser.username };
 };
 
@@ -45,7 +46,8 @@ export const loginUser = async (email, password) => {
   // Send email verification token
   if (!user.verifiedAt) {
     const emailToken = await generateEmailToken(user.id);
-    return { code: 3, message: "Email verifiction required.", emailToken };
+    await sendVerificationEmail(user, emailToken.token);
+    return { code: 3, message: "Email verifiction required." };
   }
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);

@@ -52,6 +52,11 @@ export const verifyEmail = async ({ token }) => {
       return { code: 2, message: "Token expired" };
     }
 
+    // check if user was verified before
+    const user = await getUserById(tokenRecord.userId);
+    if (user && user.verifiedAt)
+      return { code: 2, message: "User is already verified" };
+
     return await prisma.$transaction(async (tx) => {
       await tx.emailVerificationToken.update({
         where: { token },

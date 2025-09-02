@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "production") {
   });
 } else {
   // Mailtrap for dev/staging
-  transporter = nodemailer.createTestAccount({
+  transporter = nodemailer.createTransport({
     host: process.env.MAILTRAP_HOST,
     port: process.env.MAILTRAP_PORT,
     auth: {
