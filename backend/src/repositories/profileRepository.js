@@ -1,9 +1,10 @@
-import { prisma } from "../config/db";
+import { prisma } from "../config/db.js";
 
 export const saveProfile = async (userId, profileData) => {
-  await prisma.profile.upsert({
+  const data = await prisma.profile.upsert({
     where: { userId },
     update: profileData,
     create: { ...profileData, userId },
   });
+  return data;
 };

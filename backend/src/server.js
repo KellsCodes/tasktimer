@@ -3,11 +3,11 @@ import express from "express";
 import cors from "cors";
 import routesGroup from "./routes/routes.js";
 import { connectDB } from "./config/db.js";
-import { Router } from "express";
+import multer from "multer";
+import { errorLogging } from "./errorLogging/error.js";
 
 const app = express();
 const port = process.env.PORT || 8080;
-const router = Router();
 
 // Middlewares
 app.use(express.json());
@@ -20,7 +20,8 @@ app.get("/", (req, res) => {
 });
 routesGroup(app);
 
-// Error handling middleware
+// Error handling
+errorLogging(app);
 
 // Connect remote DB and run server
 connectDB()

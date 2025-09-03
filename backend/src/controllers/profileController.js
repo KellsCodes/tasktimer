@@ -1,8 +1,13 @@
-import { saveProfile } from "../repositories/profileRepository.js";
+import { saveUserProfile } from "../services/profileService.js";
 
-export const saveUserProfile = async (req, res) => {
+export const saveUserProfileController = async (req, res) => {
   const profileData = req.body;
   const userId = req.user.id;
-  const profile = await saveProfile(userId, profileData);
-  return res.json({ code: 1, message: "profile created", data: profile });
+  const file = req.file;
+  const { statusCode, result } = await saveUserProfile(
+    userId,
+    profileData,
+    file
+  );
+  return res.status(statusCode).json(result);
 };

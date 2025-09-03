@@ -8,7 +8,8 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     const allowed = ["image/jpeg", "image/png", "image/webp"];
     if (!allowed.includes(file.mimetype)) {
-      return cb(new Error("Only .jpg, .png, .webp files allowed"));
+      return cb({ code: 400, message: "Only .jpg, .png, .webp files allowed" });
+      // return cb(new Error("Only .jpg, .png, .webp files allowed"));
     }
     cb(null, true);
   },
