@@ -14,6 +14,6 @@ export const saveFile = async (buffer, filename) => {
     const filePath = path.join(uploadDir, filename);
     fs.writeFileSync(filePath, buffer);
 
-    return filePath;
+    return `storage/${filename}`;
   }
 };

@@ -3,7 +3,6 @@ import express from "express";
 import cors from "cors";
 import routesGroup from "./routes/routes.js";
 import { connectDB } from "./config/db.js";
-import multer from "multer";
 import { errorLogging } from "./errorLogging/error.js";
 
 const app = express();
@@ -18,7 +17,7 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("Hello from time.it..");
 });
-routesGroup(app);
+routesGroup(app, express);
 
 // Error handling
 errorLogging(app);
