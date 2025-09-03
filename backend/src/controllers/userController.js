@@ -1,5 +1,6 @@
 import { verifyEmail } from "../repositories/userRepository.js";
 import {
+  generateNewRefreshToken,
   loginUser,
   registerUser,
   userLogOut,
@@ -70,8 +71,14 @@ export const emailVerification = async (req, res) => {
 };
 
 export const logOut = async (req, res) => {
-  // return req.body
   const { refreshToken } = req.body;
-  const { statusCode, result } = await userLogOut(refreshToken);
+  const user = req.user;
+  const { statusCode, result } = await userLogOut(refreshToken, user);
+  return res.status(statusCode).json(result);
+};
+
+export const refreshTokenController = async (req, res) => {
+  const { refreshToken } = req.body;
+  const { statusCode, result } = await generateNewRefreshToken(refreshToken);
   return res.status(statusCode).json(result);
 };
