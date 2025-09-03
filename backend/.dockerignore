@@ -2,3 +2,4 @@ bun.lock
 Dockerfile
 node_modules
 .env
+storage

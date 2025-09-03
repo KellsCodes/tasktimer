@@ -30,9 +30,9 @@ model User {
 
 model Profile {
   id            Int @id @default(autoincrement())
-  firstname     String? @db.VarChar(15)
-  lastname      String? @db.VarChar(15)
-  profession    String? @db.VarChar(15)
+  firstname     String? @db.VarChar(20)
+  lastname      String? @db.VarChar(20)
+  profession    String? @db.VarChar(25)
   profileImage  String? @db.VarChar(255)
   userId        Int     @unique
   user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)   
