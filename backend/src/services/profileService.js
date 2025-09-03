@@ -25,11 +25,9 @@ export const saveUserProfile = async (userId, profileData, file) => {
       },
     };
   } catch (error) {
-    console.log("Errrrrrr....", error)
     if (profileImagePath && fs.existsSync(profileImagePath)) {
       fs.unlinkSync(profileImagePath);
     }
-    console.error("Profile update error: ", error);
     return { statusCode: 500, result: { code: 2, message: error.message } };
   }
 };
