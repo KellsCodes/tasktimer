@@ -1,10 +1,15 @@
-import { generateAccessToken, generateRefreshToken } from "../config/jwt.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "../config/jwt.js";
 import {
   createToken,
   createUser,
   emailVerificationToken,
   getUserByEmail,
   logOutUser,
+  refreshStoredToken,
 } from "../repositories/userRepository.js";
 
 import bcrypt from "bcrypt";
@@ -48,7 +53,7 @@ export const loginUser = async (email, password) => {
   if (!user.verifiedAt) {
     const emailToken = await generateEmailToken(user.id);
     await sendVerificationEmail(user, emailToken.token);
-    return { code: 3, message: "Email verifiction required." };
+    return { code: 3, message: `Email verifiction link sent to ${user.email}` };
   }
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
@@ -80,7 +85,7 @@ const generateEmailToken = async (userId) => {
   return data;
 };
 
-export const userLogOut = async (refreshToken) => {
+export const userLogOut = async (refreshToken, user) => {
   try {
     if (!refreshToken) {
       return {
@@ -89,11 +94,46 @@ export const userLogOut = async (refreshToken) => {
       };
     }
     // Delete the refreshToken
-    return await logOutUser(refreshToken);
+    return await logOutUser(refreshToken, user);
   } catch (error) {
     return {
       result: { code: 3, message: "Internal server error", error },
       statusCode: 500,
+    };
+  }
+};
+
+export const generateNewRefreshToken = async (token) => {
+  if (!token) {
+    return {
+      statusCode: 401,
+      result: { code: 2, message: "Refresh token is required" },
+    };
+  }
+  try {
+    const isRefreshTokenValid = verifyRefreshToken(token);
+    if (isRefreshTokenValid) {
+      const { statusCode, result } = await refreshStoredToken(token);
+
+      return {
+        statusCode,
+        result,
+      };
+    }
+    return {
+      statusCode: 401,
+      result: { code: 2, message: "Invalid refresh token." },
+    };
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return {
+        statusCode: 401,
+        result: { code: 2, message: "Refresh token expired." },
+      };
+    }
+    return {
+      statusCode: 401,
+      result: { code: 3, message: "Invalid refresh token." },
     };
   }
 };
