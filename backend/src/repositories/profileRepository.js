@@ -16,3 +16,9 @@ export const saveProfile = async (userId, profileData) => {
   });
   return data;
 };
+
+export const getUserProfile = async (userId) => {
+  return await prisma.profile.findUnique({
+    where: { userId },
+  });
+};

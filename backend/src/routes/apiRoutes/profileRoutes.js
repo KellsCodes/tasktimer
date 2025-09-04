@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
-import { saveUserProfileController } from "../../controllers/profileController.js";
+import {
+  getProfileController,
+  saveUserProfileController,
+} from "../../controllers/profileController.js";
 import uploadMiddleware from "../../middlewares/uploadMiddleware.js";
 
 const profileRoutes = Router();
@@ -17,5 +20,6 @@ profileRoutes.put(
   uploadMiddleware,
   saveUserProfileController
 );
+profileRoutes.get("/profile", authMiddleware, getProfileController);
 
 export default profileRoutes;
