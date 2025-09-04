@@ -6,7 +6,7 @@ export const saveProfile = async (userId, profileData) => {
   const existingProfile = await prisma.profile.findUnique({
     where: { userId },
   });
-  if (existingProfile) {
+  if (existingProfile && existingProfile.profileImage) {
     await removeImage(existingProfile.profileImage);
   }
   const data = await prisma.profile.upsert({
