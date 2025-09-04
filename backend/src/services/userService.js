@@ -22,7 +22,7 @@ export const registerUser = async (userData) => {
   // Check if user already exists
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
-    return { code: 2, message: "User already exists" };
+    return { code: 2, message: "User already exists." };
   }
 
   // Hash the password
@@ -74,7 +74,7 @@ export const loginUser = async (email, password) => {
   };
 };
 
-const generateEmailToken = async (userId) => {
+export const generateEmailToken = async (userId) => {
   const verificationToken = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // expires in 1hr
   const data = await emailVerificationToken({

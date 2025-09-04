@@ -20,18 +20,18 @@ f. User should be able to update task
 f. User should be able to delete task task
 g. User should be able to Get task(s)
 =============================================
-(SIGNUP)
+(SIGNUP Oauth)
 1. User email
 2. User password and confirm password
 3. User username
 4. Use of OAuth
 ============================================
-(LOGIN)
+(LOGIN Oauth)
 1. User email || username
 2. User password
 3. Use of OAuth
 ===========================================
-(PROFILE)
+(PROFILE completed)
 1. Firstname
 2. Lastname
 3. Profession
