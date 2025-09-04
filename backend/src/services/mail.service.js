@@ -2,6 +2,12 @@ import transporter from "../config/mailer.js";
 import resetPasswordEmail from "../utils/templates/resetPasswordEmail.js";
 import verificationEmail from "../utils/templates/verificationEmail.js";
 
+// const html = (url) => {
+//   const url = url
+//   return `
+//   `
+// }
+
 export const sendVerificationEmail = async (user, token) => {
   const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
   await transporter.sendMail({
@@ -12,7 +18,7 @@ export const sendVerificationEmail = async (user, token) => {
   });
 };
 export const sendResetPasswordEmail = async (user, token) => {
-  const resetUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-email?token=${token}`;
   await transporter.sendMail({
     from: `time.it@mail.com`,
     to: user.email,

@@ -1,8 +1,14 @@
-import { updateUserPassword } from "../repositories/passwordRepository.js";
+import {
+  savePasswordResetToken,
+  updatePasswordResetToken,
+  updateUserPassword,
+} from "../repositories/passwordRepository.js";
 import { getUserByEmail, getUserById } from "../repositories/userRepository.js";
 import { updatePasswordSchema } from "../validations/passwordValidations.js";
 import bcrypt from "bcrypt";
-import { sendVerificationEmail } from "./mail.service.js";
+import crypto from "crypto";
+import { sendResetPasswordEmail } from "./mail.service.js";
+// import { sendVerificationEmail } from "./mail.service.js";
 
 export const updatePasswordService = async (userId, passwordData) => {
   const validData = updatePasswordSchema.validate(passwordData);
@@ -72,22 +78,69 @@ export const requestPasswordChange = async (email) => {
     if (!email) {
       return {
         statusCode: 400,
-        result: { code: 1, message: "Invalid email address" },
+        result: { code: 1, message: "Email address is empty." },
       };
     }
     // check if user exists
     const user = await getUserByEmail(email);
     if (!user)
       return {
-        statusCode: 400,
-        result: { code: 2, message: "Email not found" },
+        statusCode: 403,
+        result: { code: 2, message: "Invalid email address" },
       };
     // send email to user with token to reset password
-    await sendVerificationEmail()
+    const emailToken = crypto.randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // expires in 1hr
+    await savePasswordResetToken({
+      token: emailToken,
+      expiresAt,
+      userId: user.id,
+    });
+    await sendResetPasswordEmail(user, emailToken);
+    return {
+      statusCode: 200,
+      result: { code: 1, message: `Password reset link sent to ${email}` },
+    };
   } catch (error) {
     return {
       statusCode: 500,
       result: { code: 2, message: error.message || "Internal server error." },
+    };
+  }
+};
+
+export const verifyResetPasswordToken = async (passwordData) => {
+  const { token } = passwordData;
+  if (!token)
+    return {
+      statusCode: 400,
+      result: { code: 2, mesaage: "Token is required." },
+    };
+  try {
+    const data = await updatePasswordResetToken(token);
+    if (data === 0)
+      return {
+        statusCode: 400,
+        result: { code: 2, message: "Token not found" },
+      };
+    if (data === 1)
+      return {
+        statusCode: 400,
+        result: { code: 2, message: "Token is invalid." },
+      };
+    const updatedPassword = await updatePasswordService(data.userId, {
+      oldPassword: passwordData.oldPassword,
+      password: passwordData.password,
+      confirmPassword: passwordData.confirmPassword,
+    });
+    return updatedPassword;
+  } catch (error) {
+    return {
+      statusCode: 500,
+      result: {
+        code: 1,
+        message: error.message || "Internal server error.",
+      },
     };
   }
 };

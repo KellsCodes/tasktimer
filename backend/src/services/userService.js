@@ -74,7 +74,7 @@ export const loginUser = async (email, password) => {
   };
 };
 
-const generateEmailToken = async (userId) => {
+export const generateEmailToken = async (userId) => {
   const verificationToken = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // expires in 1hr
   const data = await emailVerificationToken({
