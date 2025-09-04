@@ -22,7 +22,7 @@ export const registerUser = async (userData) => {
   // Check if user already exists
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
-    return { code: 2, message: "User already exists" };
+    return { code: 2, message: "User already exists." };
   }
 
   // Hash the password

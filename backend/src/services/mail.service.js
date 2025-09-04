@@ -1,4 +1,5 @@
 import transporter from "../config/mailer.js";
+import resetPasswordEmail from "../utils/templates/resetPasswordEmail.js";
 import verificationEmail from "../utils/templates/verificationEmail.js";
 
 export const sendVerificationEmail = async (user, token) => {
@@ -7,6 +8,15 @@ export const sendVerificationEmail = async (user, token) => {
     from: `time.it@mail.com`,
     to: user.email,
     subject: "Verify your email address",
-    html: verificationEmail(user.username, verifyUrl)
-  })
+    html: verificationEmail(user.username, verifyUrl),
+  });
+};
+export const sendResetPasswordEmail = async (user, token) => {
+  const resetUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+  await transporter.sendMail({
+    from: `time.it@mail.com`,
+    to: user.email,
+    subject: "Reset password",
+    html: resetPasswordEmail(user.username, resetUrl),
+  });
 };
