@@ -81,7 +81,7 @@ model Tasks {
   
   timeZone        String    @db.VarChar(64)
   reminded24h     Boolean   @default(false)
-  reminded1h      Boolean   @default(false)
+  reminded1hStart      Boolean   @default(false)
   reminded1hEnd   Boolean   @default(false)
   remindedEnd     Boolean   @default(false)
   
@@ -90,4 +90,10 @@ model Tasks {
   
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt()
+
+  @@index([reminder24h, startAt])
+  @@index([reminded1hStart, startAt])
+  @@index([reminded1hEnd, endAt])
+  @@index([remindedEnd, endAt])
+  @@index([userId])
 }
