@@ -38,7 +38,7 @@ g. User should be able to Get task(s)
 4. Interest (grouping)
 5. Profile image
 ==========================================
-(SECURITY)
+(SECURITY (completed(we can use otp to make it more secure later)))
 1. Update password(use password confirmation with email)
 =========================================
 (TASKS: CREATE | UPDATE)
@@ -46,7 +46,7 @@ g. User should be able to Get task(s)
 2. Status(pending, Running, completed)
 3. Start date
 4. End date
-5. Create at date
+5. Created at date
 6. Reminder (Start date and time(24 hours and 30mins to start time, 1 hr to end))
 7. The create and update should be on a modal
 8. The delete and update btns should be on the actions column with tool tip
@@ -60,7 +60,7 @@ g. User should be able to Get task(s)
 5. User delete account
 6. User get tasks
 7. User delete task(s)
-8. Emailing (user verification, account recovery, reminder
+8. Emailing (user verification, account recovery, reminder)
 =========================================
 
 (TABLE Design)
@@ -69,4 +69,6 @@ g. User should be able to Get task(s)
 3. tasks table (id, user_id, task title, status(1=pending,2=running,3=completed), created_at, updated_at)
 4. job table (id, task_id(with db transaction), start date, start time, end date, end time, created_at, updated_at) 
 5. job schedule table (id, job_id, is_active)
-6. account recovery table (id, user_id, recovery_code, expires_at, created_at)
+6. account recovery token table (id, user_id, recovery_code, expires_at, created_at)
+7. user email verification token table (id, user_id, token, expires_at, created_at)
+8. log in refresh token table (id, user_id, token, expires_at, created_at)
