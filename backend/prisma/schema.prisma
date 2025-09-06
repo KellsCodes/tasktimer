@@ -15,28 +15,29 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
-  username    String?   @db.VarChar(12)
-  password    String?   // for local auth, null if using OAuth
-  provider    String    @default("local") // "local" or "google"
-  verifiedAt  DateTime? // null until verified
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  profile     Profile?
-  token       RefreshToken[]
-  emailToken  EmailVerificationToken[]
+  id              Int       @id @default(autoincrement())
+  email           String    @unique
+  username        String?   @db.VarChar(12)
+  password        String?   // for local auth, null if using OAuth
+  provider        String    @default("local") // "local" or "google"
+  verifiedAt      DateTime? // null until verified
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  profile         Profile?
+  token           RefreshToken[]
+  tasks           Tasks[]
+  emailToken      EmailVerificationToken[]
   resetPasswordToken  ResetPasswordToken[]
 }
 
 model Profile {
-  id            Int @id @default(autoincrement())
-  firstname     String? @db.VarChar(20)
-  lastname      String? @db.VarChar(20)
-  profession    String? @db.VarChar(25)
-  profileImage  String? @db.VarChar(255)
-  userId        Int     @unique
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)   
+  id              Int @id @default(autoincrement())
+  firstname       String? @db.VarChar(20)
+  lastname        String? @db.VarChar(20)
+  profession      String? @db.VarChar(25)
+  profileImage    String? @db.VarChar(255)
+  userId          Int     @unique
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)   
 }
 
 model RefreshToken {
@@ -51,23 +52,51 @@ model RefreshToken {
 }
 
 model EmailVerificationToken {
-  id                       Int        @id @default(autoincrement())
-  token                    String     @unique  @db.VarChar(256)
-  userId                   Int
-  user                     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isUsed                   Boolean   @default(false)
-  expiresAt                DateTime
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @updatedAt
+  id              Int        @id @default(autoincrement())
+  token           String     @unique  @db.VarChar(256)
+  userId          Int
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isUsed          Boolean   @default(false)
+  expiresAt       DateTime
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model ResetPasswordToken {
-  id                       Int        @id @default(autoincrement())
-  token                    String     @unique  @db.VarChar(256)
-  userId                   Int
-  user                     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isUsed                   Boolean   @default(false)
-  expiresAt                DateTime
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @updatedAt
+  id              Int        @id @default(autoincrement())
+  token           String     @unique  @db.VarChar(256)
+  userId          Int
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isUsed          Boolean   @default(false)
+  expiresAt       DateTime
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Tasks {
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(256)
+  status          Int       @default(1) // 1 = Pending, 2 = Running, 3 = Completed,
+
+  startAt         DateTime
+  endAt           DateTime
+  
+  timeZone        String    @db.VarChar(64)
+  reminded24h     Boolean   @default(false)
+  reminded1hStart Boolean   @default(false)
+  remindedStart   Boolean   @default(false)
+  reminded1hEnd   Boolean   @default(false)
+  remindedEnd     Boolean   @default(false)
+  
+  userId          Int
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt()
+
+  @@index([reminded24h, startAt])
+  @@index([reminded1hStart, startAt])
+  @@index([reminded1hEnd, endAt])
+  @@index([remindedEnd, endAt])
+  @@index([userId])
 }
