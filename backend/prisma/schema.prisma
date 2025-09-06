@@ -76,13 +76,15 @@ model ResetPasswordToken {
 model Tasks {
   id              Int       @id @default(autoincrement())
   title           String    @db.VarChar(256)
+  status          Int       @default(1) // 1 = Pending, 2 = Running, 3 = Completed,
 
   startAt         DateTime
   endAt           DateTime
   
   timeZone        String    @db.VarChar(64)
   reminded24h     Boolean   @default(false)
-  reminded1hStart      Boolean   @default(false)
+  reminded1hStart Boolean   @default(false)
+  remindedStart   Boolean   @default(false)
   reminded1hEnd   Boolean   @default(false)
   remindedEnd     Boolean   @default(false)
   

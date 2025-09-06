@@ -4,6 +4,7 @@ import cors from "cors";
 import routesGroup from "./routes/routes.js";
 import { connectDB } from "./config/db.js";
 import { errorLogging } from "./errorLogging/error.js";
+import { defaultHomePage } from "./utils/templates/defaultHomePage.js";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -15,7 +16,7 @@ app.use(cors());
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("Hello from time.it..");
+  res.send(defaultHomePage());
 });
 routesGroup(app, express);
 
