@@ -28,11 +28,9 @@ export const addTaskService = async (userId, task) => {
   };
   try {
     // Check for task updating
-    if (task.id) {
-      console.log("get here....");
-      taskData.id = task.id;
-    }
+    if (task.id) taskData.id = task.id;
     if (task.status) taskData.status = task.status;
+
     const data = await saveTask(taskData);
     return {
       statusCode: 200,
@@ -51,6 +49,8 @@ export const addTaskService = async (userId, task) => {
           endDate: data.localEndDate,
           startHour: data.localStartHour,
           endHour: data.localEndHour,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
         },
       },
     };

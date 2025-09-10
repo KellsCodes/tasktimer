@@ -5,5 +5,6 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 const taskRoutes = Router();
 
 taskRoutes.post("/add-task", authMiddleware, createTaskController);
+taskRoutes.put("/update-task", authMiddleware, createTaskController);
 
 export default taskRoutes;
