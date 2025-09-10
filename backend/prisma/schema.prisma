@@ -82,8 +82,10 @@ model Tasks {
   endAt           DateTime
   
   timeZone        String    @db.VarChar(64)
-  localDate       String?   @db.VarChar(10)
-  localHour       Int?      
+  localStartDate  String?   @db.VarChar(10)
+  localStartHour  Int?
+  localEndDate    String?   @db.VarChar(64)
+  localEndHour    Int?          
 
   reminded24h     Boolean   @default(false)
   reminded1hStart Boolean   @default(false)
