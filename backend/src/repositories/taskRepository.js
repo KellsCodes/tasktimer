@@ -9,3 +9,11 @@ export const saveTask = async (task) => {
 
   return data;
 };
+
+export const getSingleTask = async (id, userId) => {
+  const data = await prisma.tasks.findFirst({
+    where: { id, userId },
+  });
+  if (!data) return 0;
+  return data;
+};

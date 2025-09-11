@@ -1,12 +1,66 @@
 import { formatDate } from "../utils/timezone.js";
-import { saveTask } from "../repositories/taskRepository.js";
+import { getSingleTask, saveTask } from "../repositories/taskRepository.js";
+import { addTaskSchema } from "../validations/taskValidation.js";
+
+const retrieveDate = (date) => {
+  return new Date(date)
+    .toISOString()
+    .slice(0, new Date(date).toISOString().indexOf("T"));
+};
 
 export const addTaskService = async (userId, task) => {
-  const validate = "";
-  const timezone = task.timeZone;
+  const { value } = addTaskSchema.validate(task);
 
-  const startLocal = formatDate(task.startDate, task.startHour, timezone);
-  const endLocal = formatDate(task.endDate, task.endHour, timezone);
+  // only update task that is yet to start i.e pending with status 0
+  if (value.id) {
+    const res = await getSingleTask(value.id, userId);
+    if (res === 0)
+      return {
+        statusCode: 404,
+        result: {
+          code: 2,
+          message: "No task with the id was found for this user.",
+        },
+      };
+    if (
+      res.status === 1 &&
+      value.status !== 1 &&
+      value.status !== 2 &&
+      value.status !== 3
+    ) {
+      return {
+        statusCode: 400,
+        result: {
+          code: 2,
+          message:
+            "Pending task can only be moved forward to running or completed.",
+        },
+      };
+    }
+    if (res.status === 2 && value.status !== 3) {
+      return {
+        statusCode: 400,
+        result: {
+          code: 2,
+          message: "Running task can only be moved to completed",
+        },
+      };
+    }
+    if (res.status === 3) {
+      return {
+        statusCode: 400,
+        result: {
+          code: 2,
+          message: "This task is completed and can't be modified.",
+        },
+      };
+    }
+  }
+  const timezone = value.timeZone;
+  const localStartDate = retrieveDate(value.startDate);
+  const localEndDate = retrieveDate(value.endDate);
+  const startLocal = formatDate(localStartDate, value.startHour, timezone);
+  const endLocal = formatDate(localEndDate, value.endHour, timezone);
 
   if (!startLocal.isValid || !endLocal.isValid)
     return {
@@ -17,19 +71,28 @@ export const addTaskService = async (userId, task) => {
   const endAtUTC = endLocal.toUTC().toJSDate();
   const taskData = {
     userId,
-    title: task.title,
+    title: value.title,
     timeZone: timezone,
     startAt: startAtUTC,
     endAt: endAtUTC,
-    localStartDate: task.startDate,
-    localStartHour: task.startHour,
-    localEndDate: task.endDate,
-    localEndHour: task.endHour,
+    localStartDate: localStartDate,
+    localStartHour: value.startHour,
+    localEndDate: localEndDate,
+    localEndHour: value.endHour,
   };
   try {
-    // Check for task updating
-    if (task.id) taskData.id = task.id;
-    if (task.status) taskData.status = task.status;
+    // Check for value updating
+    if (value.id) taskData.id = value.id;
+    if (value.status) taskData.status = value.status;
+    if (new Date(startAtUTC) >= new Date(endAtUTC)) {
+      return {
+        statusCode: 400,
+        result: {
+          code: 2,
+          message: "Task end date and time must be greater than the start date",
+        },
+      };
+    }
 
     const data = await saveTask(taskData);
     return {
@@ -37,7 +100,7 @@ export const addTaskService = async (userId, task) => {
       result: {
         code: 1,
         message: `${
-          task.id ? "Task updated successfully." : "Task added successfully."
+          value.id ? "Task updated successfully." : "Task added successfully."
         }`,
         data: {
           id: data.id,
