@@ -160,20 +160,21 @@ export const deleteTaskService = async (userId, taskId) => {
   }
 };
 
-export const getTasksService = async (userId) => {
+export const getTasksService = async (userId, page, pageSize) => {
   try {
-    const data = await getTasks(userId);
-    if (!data)
+    const data = await getTasks(userId, page, pageSize);
+    if (data === 0)
       return {
         statusCode: 404,
         result: { code: 3, message: "No record found" },
       };
+    // console.log(data);
     return {
       statusCode: 200,
       result: {
         code: 1,
         message: "Tasks retrieved successfully",
-        data: data.map((item) => transformData(item)),
+        data: { ...data, data: data.data.map((item) => transformData(item)) },
       },
     };
   } catch (error) {
