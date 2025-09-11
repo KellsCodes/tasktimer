@@ -2,9 +2,11 @@ import { formatDate, retrieveDate } from "../utils/timezone.js";
 import {
   deleteTask,
   getSingleTask,
+  getTasks,
   saveTask,
 } from "../repositories/taskRepository.js";
 import { addTaskSchema } from "../validations/taskValidation.js";
+import { transformData } from "../utils/tasksUtil.js";
 
 export const addTaskService = async (userId, task) => {
   const { value } = addTaskSchema.validate(task);
@@ -147,6 +149,32 @@ export const deleteTaskService = async (userId, taskId) => {
     return {
       statusCode: 200,
       result: { code: 1, message: "Delete task is successful." },
+    };
+  } catch (error) {
+    if (error.message)
+      return { statusCode: 422, result: { code: 2, message: error.message } };
+    return {
+      statusCode: 500,
+      result: { code: 2, message: "An internal server error occurred." },
+    };
+  }
+};
+
+export const getTasksService = async (userId) => {
+  try {
+    const data = await getTasks(userId);
+    if (!data)
+      return {
+        statusCode: 404,
+        result: { code: 3, message: "No record found" },
+      };
+    return {
+      statusCode: 200,
+      result: {
+        code: 1,
+        message: "Tasks retrieved successfully",
+        data: data.map((item) => transformData(item)),
+      },
     };
   } catch (error) {
     if (error.message)

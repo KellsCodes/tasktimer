@@ -27,3 +27,9 @@ export const deleteTask = async (taskId, userId) => {
   });
   return res;
 };
+
+export const getTasks = async (userId) => {
+  return await prisma.tasks.findMany({
+    where: { userId },
+  });
+};
