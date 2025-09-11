@@ -17,3 +17,13 @@ export const getSingleTask = async (id, userId) => {
   if (!data) return 0;
   return data;
 };
+
+export const deleteTask = async (taskId, userId) => {
+  const data = await getSingleTask(taskId, userId);
+  if (data === 0) return 0;
+  if (data.status === 3) return 1;
+  const res = await prisma.tasks.delete({
+    where: { id: taskId, userId },
+  });
+  return res;
+};

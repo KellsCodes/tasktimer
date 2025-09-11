@@ -1,12 +1,10 @@
-import { formatDate } from "../utils/timezone.js";
-import { getSingleTask, saveTask } from "../repositories/taskRepository.js";
+import { formatDate, retrieveDate } from "../utils/timezone.js";
+import {
+  deleteTask,
+  getSingleTask,
+  saveTask,
+} from "../repositories/taskRepository.js";
 import { addTaskSchema } from "../validations/taskValidation.js";
-
-const retrieveDate = (date) => {
-  return new Date(date)
-    .toISOString()
-    .slice(0, new Date(date).toISOString().indexOf("T"));
-};
 
 export const addTaskService = async (userId, task) => {
   const { value } = addTaskSchema.validate(task);
@@ -126,8 +124,36 @@ export const addTaskService = async (userId, task) => {
       };
     }
     return {
-      statusCode: 400,
+      statusCode: 422,
       result: { code: 2, message: error.message },
+    };
+  }
+};
+
+export const deleteTaskService = async (userId, taskId) => {
+  try {
+    const res = await deleteTask(taskId, userId);
+    if (res === 0)
+      return {
+        statusCode: 404,
+        result: { code: 2, message: "Task with the given id not found." },
+      };
+    if (res === 1)
+      return {
+        statusCode: 400,
+        result: { code: 2, message: "Completed tasks can't be deleted." },
+      };
+
+    return {
+      statusCode: 200,
+      result: { code: 1, message: "Delete task is successful." },
+    };
+  } catch (error) {
+    if (error.message)
+      return { statusCode: 422, result: { code: 2, message: error.message } };
+    return {
+      statusCode: 500,
+      result: { code: 2, message: "An internal server error occurred." },
     };
   }
 };

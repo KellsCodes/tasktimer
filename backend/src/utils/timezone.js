@@ -12,3 +12,9 @@ export const formatDate = (date, hour, timezone) => {
 export const getServerTimeZone = () => {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 };
+
+export const retrieveDate = (date) => {
+  return new Date(date)
+    .toISOString()
+    .slice(0, new Date(date).toISOString().indexOf("T"));
+};
