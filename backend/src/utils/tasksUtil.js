@@ -9,6 +9,8 @@ export const transformData = (data) => {
     endDate: data.localEndDate,
     startHour: data.localStartHour,
     endHour: data.localEndHour,
+    startAtUTC: data.startAt,
+    endAtUTC: data.endAt,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
   };

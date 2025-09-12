@@ -48,6 +48,7 @@ export const getTasks = async (
   const end = endDate
     ? DateTime.fromISO(endDate).endOf("day").toJSDate()
     : null;
+    // console.log({start, end})
   const where = {
     userId,
     ...(search
