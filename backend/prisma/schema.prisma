@@ -82,6 +82,11 @@ model Tasks {
   endAt           DateTime
   
   timeZone        String    @db.VarChar(64)
+  localStartDate  String?   @db.VarChar(10)
+  localStartHour  Int?
+  localEndDate    String?   @db.VarChar(64)
+  localEndHour    Int?          
+
   reminded24h     Boolean   @default(false)
   reminded1hStart Boolean   @default(false)
   remindedStart   Boolean   @default(false)
@@ -96,6 +101,7 @@ model Tasks {
 
   @@index([reminded24h, startAt])
   @@index([reminded1hStart, startAt])
+  @@index([remindedStart, startAt])
   @@index([reminded1hEnd, endAt])
   @@index([remindedEnd, endAt])
   @@index([userId])
