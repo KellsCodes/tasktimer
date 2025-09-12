@@ -1,4 +1,5 @@
 import { prisma } from "../config/db.js";
+import { DateTime } from "luxon";
 
 export const saveTask = async (task) => {
   const data = await prisma.tasks.upsert({
@@ -28,11 +29,26 @@ export const deleteTask = async (taskId, userId) => {
   return res;
 };
 
-export const getTasks = async (userId, page = 1, pageSize = 10, search) => {
+export const getTasks = async (
+  userId,
+  page = 1,
+  pageSize = 10,
+  search,
+  status,
+  startDate,
+  endDate
+) => {
   if (isNaN(page)) page = 1;
   if (isNaN(pageSize)) pageSize = 10;
   const skip = (page - 1) * pageSize;
   const take = pageSize;
+  const start = startDate
+    ? DateTime.fromISO(startDate).startOf("day").toJSDate()
+    : null;
+  const end = endDate
+    ? DateTime.fromISO(endDate).endOf("day").toJSDate()
+    : null;
+    // console.log({start, end})
   const where = {
     userId,
     ...(search
@@ -40,6 +56,15 @@ export const getTasks = async (userId, page = 1, pageSize = 10, search) => {
           title: {
             contains: search.toLowerCase(),
           },
+        }
+      : {}),
+    ...(!isNaN(status) && status >= 1 && status <= 3 ? { status } : {}),
+    ...(start || end
+      ? {
+          AND: [
+            ...(end ? [{ startAt: { lte: end } }] : []),
+            ...(start ? [{ endAt: { gte: start } }] : []),
+          ],
         }
       : {}),
   };

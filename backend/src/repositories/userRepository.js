@@ -118,10 +118,13 @@ export const refreshStoredToken = async (token) => {
   const newRefreshToken = generateRefreshToken({ id, email, username });
 
   // invalidate refreshToken and generate new one
-  await prisma.refreshToken.update({
+  await prisma.refreshToken.delete({
     where: { refreshToken: token },
-    data: { revoked: true, expiresAt: new Date() },
   });
+  // await prisma.refreshToken.update({
+  //   where: { refreshToken: token },
+  //   data: { revoked: true, expiresAt: new Date() },
+  // });
   await createToken({
     data: {
       refreshToken: newRefreshToken,

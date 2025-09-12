@@ -160,9 +160,25 @@ export const deleteTaskService = async (userId, taskId) => {
   }
 };
 
-export const getTasksService = async (userId, page, pageSize, search) => {
+export const getTasksService = async (
+  userId,
+  page,
+  pageSize,
+  search,
+  status,
+  startDate,
+  endDate
+) => {
   try {
-    const data = await getTasks(userId, page, pageSize, search);
+    const data = await getTasks(
+      userId,
+      page,
+      pageSize,
+      search,
+      status,
+      startDate,
+      endDate
+    );
     if (data === 0)
       return {
         statusCode: 404,

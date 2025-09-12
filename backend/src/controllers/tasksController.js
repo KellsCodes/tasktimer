@@ -20,13 +20,16 @@ export const deleteTaskController = async (req, res) => {
 
 export const getTasksController = async (req, res) => {
   const userId = req.user.id;
-  const { page, pageSize } = req.query;
+  const { page, pageSize, status, startDate, endDate } = req.query;
   const search = req.query.search || "";
   const { statusCode, result } = await getTasksService(
     userId,
     parseInt(page),
     parseInt(pageSize),
-    search
+    search,
+    parseInt(status),
+    startDate,
+    endDate
   );
   return res.status(statusCode).json(result);
 };
