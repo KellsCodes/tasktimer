@@ -12,5 +12,6 @@ taskRoutes.post("/add-task", authMiddleware, createTaskController);
 taskRoutes.put("/update-task", authMiddleware, createTaskController);
 taskRoutes.delete("/delete-task", authMiddleware, deleteTaskController);
 taskRoutes.get("/get-tasks", authMiddleware, getTasksController);
+taskRoutes.get("/filter-tasks", authMiddleware, getTasksController);
 
 export default taskRoutes;
