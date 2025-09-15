@@ -80,18 +80,12 @@ model Tasks {
 
   startAt         DateTime
   endAt           DateTime
-  
   timeZone        String    @db.VarChar(64)
+
   localStartDate  String?   @db.VarChar(10)
   localStartHour  Int?
   localEndDate    String?   @db.VarChar(64)
-  localEndHour    Int?          
-
-  reminded24h     Boolean   @default(false)
-  reminded1hStart Boolean   @default(false)
-  remindedStart   Boolean   @default(false)
-  reminded1hEnd   Boolean   @default(false)
-  remindedEnd     Boolean   @default(false)
+  localEndHour    Int?      
   
   userId          Int
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -99,10 +93,7 @@ model Tasks {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt()
 
-  @@index([reminded24h, startAt])
-  @@index([reminded1hStart, startAt])
-  @@index([remindedStart, startAt])
-  @@index([reminded1hEnd, endAt])
-  @@index([remindedEnd, endAt])
+  @@index([status, startAt])
+  @@index([status, endAt])
   @@index([userId])
 }
