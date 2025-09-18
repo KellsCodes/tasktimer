@@ -1,5 +1,5 @@
 'use client';
-import { redirect, usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
 import { usernameRegEx, passwordRegEx } from '@/lib/regEx';
