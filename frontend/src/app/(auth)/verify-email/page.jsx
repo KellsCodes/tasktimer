@@ -5,6 +5,7 @@ import { EmailVerificationScreen } from './emailVerificationScreen';
 import { EmailVerificationSuccess } from './success';
 import { EmailVerificationErrorScreen } from './errorScreen';
 import { EmailVerificationServerError } from './serverError';
+import { useSearchParams } from 'next/navigation';
 
 
 export default function RegisterUser() {
@@ -13,12 +14,13 @@ export default function RegisterUser() {
     const [isVerificationFailed, setIsVerificationFailed] = useState(false)
     const [message, setMessage] = useState(null)
 
+    const token = useSearchParams().get("token")
+
     const handleEmailVerification = async () => {
         try {
-            const { data } = await api.post("/verify-email", {
+            const { data } = await api.put("/verify-email", {
                 token
             })
-            console.log(data)
             if (data.code === 1) {
                 setIsEmailVerified(true)
             } else {
@@ -28,8 +30,10 @@ export default function RegisterUser() {
         } catch (error) {
             if (error.response.status === 500) {
                 setMessage("Email verification failed. Please try again")
+            } else {
+                setIsVerificationFailed(true)
             }
-            console.log(error)
+            console.error(error)
         }
         setIsLoading(false)
     }
