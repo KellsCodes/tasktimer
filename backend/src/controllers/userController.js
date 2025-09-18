@@ -13,16 +13,14 @@ export const register = async (req, res) => {
     // Validate request body
     const { error } = userSchema.validate(req.body);
     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
+      return res
+        .status(400)
+        .json({ code: 2, message: error.details[0].message });
     }
 
     // Register the user
-    const newUser = await registerUser(req.body);
-    res.status(201).json({
-      code: 1,
-      message: "User registered successfully",
-      user: newUser,
-    });
+    const { statusCode, result } = await registerUser(req.body);
+    res.status(statusCode).json(result);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
