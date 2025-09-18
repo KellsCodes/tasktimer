@@ -19,13 +19,15 @@ import { usePathname } from 'next/navigation';
 import { Modal } from "./Modal";
 import { useState } from "react";
 import Tasks from "./tasks";
+import { useUser } from '../authProvider';
 
 export default function AuthLayout({ children }) {
     const pathname = usePathname()
     const [open, setOpenChange] = useState(false);
+    const { user } = useUser();
     return (
         <SidebarProvider>
-            <AppSidebar />
+            <AppSidebar user={user} />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 border-b">
                     <div className="w-full pr-4 flex items-center justify-between">

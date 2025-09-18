@@ -20,7 +20,7 @@ const Register = () => {
     });
     const pathname = usePathname()
 
-    const { _, setUser } = useUser()
+    const { setUser } = useUser()
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)

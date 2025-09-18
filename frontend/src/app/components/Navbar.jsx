@@ -10,7 +10,7 @@ const Navbar = () => {
                 </div>
                 <ul className="flex space-x-4">
                     <li>
-                        <a href="/dashboard" className="text-sm font-bold py-2 px-3 border border-[#23374C] hover:bg-[#23374C] hover:text-white transition-all duration-500 ease-in-out rounded-[5px] text-gray-[#596878] w-[90px] text-center">
+                        <a href="/login" className="text-sm font-bold py-2 px-3 border border-[#23374C] hover:bg-[#23374C] hover:text-white transition-all duration-500 ease-in-out rounded-[5px] text-gray-[#596878] w-[90px] text-center">
                             Log In
                         </a>
                     </li>
