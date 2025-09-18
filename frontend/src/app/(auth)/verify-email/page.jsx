@@ -1,16 +1,48 @@
-import { IoMdCheckmarkCircle } from "react-icons/io";
+"use client"
+import React, { useEffect, useState } from 'react';
+import api from '@/lib/axios';
+import { EmailVerificationScreen } from './emailVerificationScreen';
+import { EmailVerificationSuccess } from './success';
+import { EmailVerificationErrorScreen } from './errorScreen';
+import { EmailVerificationServerError } from './serverError';
 
 
 export default function RegisterUser() {
+    const [isLoading, setIsLoading] = useState(true)
+    const [isEmailVerified, setIsEmailVerified] = useState(false)
+    const [isVerificationFailed, setIsVerificationFailed] = useState(false)
+    const [message, setMessage] = useState(null)
+
+    const handleEmailVerification = async () => {
+        try {
+            const { data } = await api.post("/verify-email", {
+                token
+            })
+            console.log(data)
+            if (data.code === 1) {
+                setIsEmailVerified(true)
+            } else {
+                setIsVerificationFailed(true)
+            }
+
+        } catch (error) {
+            if (error.response.status === 500) {
+                setMessage("Email verification failed. Please try again")
+            }
+            console.log(error)
+        }
+        setIsLoading(false)
+    }
+
+    useEffect(() => {
+        handleEmailVerification()
+    }, [])
     return (
         <div className="font-sans h-screen w-screen relative flex items-center justify-center px-4">
-            <div className="h-[700px] w-full 2xl:w-[500px] bg-white rounded-md border border-2 border-gray-100 shadow-lg bg-white p-4 flex flex-col items-center justify-center gap-y-4">
-                <IoMdCheckmarkCircle className="text-[60px] text-prim" />
-                <h1 className="font-bold text-[28px]">Email Verification</h1>
-                <p className="text-center text-md">Your email was verified, you can now continue using the application.</p>
-                <a href="/login" className="h-12 w-full md:w-[300px] rounded-md bg-prim text-md font-bold text-white p-2 flex items-center justify-center">Log in</a>
-            </div>
-
+            {isLoading && <EmailVerificationScreen />}
+            {isEmailVerified && <EmailVerificationSuccess />}
+            {isVerificationFailed && <EmailVerificationErrorScreen />}
+            {message && <EmailVerificationServerError message={message} />}
         </div>
     )
 };
