@@ -17,12 +17,20 @@ import crypto from "crypto";
 import { sendVerificationEmail } from "./mail.service.js";
 
 export const registerUser = async (userData) => {
-  const { username, email, password } = userData;
+  const { username, email, password, confirm_password } = userData;
+  if (password !== confirm_password)
+    return {
+      statusCode: 400,
+      result: { code: 2, message: "Password mismatch" },
+    };
 
   // Check if user already exists
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
-    return { code: 2, message: "User already exists." };
+    return {
+      statusCode: 400,
+      result: { code: 2, message: "User already exists." },
+    };
   }
 
   // Hash the password
@@ -38,7 +46,16 @@ export const registerUser = async (userData) => {
   // Send email verification token
   const emailToken = await generateEmailToken(newUser.id);
   await sendVerificationEmail(newUser, emailToken.token);
-  return { id: newUser.id, email: newUser.email, username: newUser.username };
+  return {
+    statusCode: 200,
+    result: {
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        username: newUser.username,
+      },
+    },
+  };
 };
 
 export const loginUser = async (email, password) => {
