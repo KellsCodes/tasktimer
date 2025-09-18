@@ -1,10 +1,12 @@
 'use client';
-import { redirect, usePathname } from 'next/navigation';
+import { redirect, usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
 import { usernameRegEx, passwordRegEx } from '@/lib/regEx';
 import api from '@/lib/axios';
 import { Spinner } from './spinner';
+import Cookies from 'js-cookie';
+import { useUser } from '../authProvider';
 // import { GrLinkedin } from 'react-icons/gr';
 // import { SiFacebook } from 'react-icons/si';
 
@@ -18,9 +20,11 @@ const Register = () => {
     });
     const pathname = usePathname()
 
+    const { _, setUser } = useUser()
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const router = useRouter()
 
     const handleChange = (e) => {
         setError(null);
@@ -47,9 +51,9 @@ const Register = () => {
                 const { data } = await api.post("/register", form)
                 setMessage("Sign up was successful, please check your email for confirmation, also check spam folder.")
                 // redirect user to welcome page (later integration)
-                console.log(data)
 
             } catch (error) {
+                console.error(error)
                 if (error.response.status === 400) {
                     setError(error.response.data.message)
                 } else {
@@ -60,8 +64,53 @@ const Register = () => {
         setIsSubmitting(false)
     };
 
+    const handleLogin = async (e) => {
+        e.preventDefault()
+        setIsSubmitting(true)
+        setMessage(null)
+        if (!form.email || !form.password) {
+            setError('All fields are required.');
+        } else {
+            try {
+                const { data } = await api.post("/login", {
+                    email: form.email,
+                    password: form.password
+                })
+                if (data.code === 3) {
+                    setError("Email not verified. " + data.message);
+                } else {
+                    /**
+                     * Save user data to local storage and context
+                     * save access token and refresh token to browser cookie
+                     * redirect user to dashboard
+                     */
+                    Cookies.set("accesToken", data.accesToken)
+                    Cookies.set("refreshToken", data.refreshToken)
+                    localStorage.setItem("user", JSON.stringify(data.user))
+                    setUser(data.user)
+                    router.push("/dashboard")
+
+                }
+
+            } catch (error) {
+                console.error(error)
+                if (error.response.status === 500) {
+                    setError('A server error occurred. Please try again.');
+                } else {
+                    setError(error.response.data.message);
+                }
+            }
+
+        }
+        setIsSubmitting(false)
+
+    }
+
     return (
-        <form onSubmit={handleSubmit} className='space-y-3'>
+        <form
+            onSubmit={pathname === "/register" ? handleSubmit : handleLogin}
+            className='space-y-3'
+        >
             <div className='space-y-6 mb-6'>
                 <h2 className='font-bold text-4xl'>{pathname === "/register" ? "Sign Up" : "Log In"}</h2>
                 <p className='px-5 text-sm text-center'>By creating a TaskIt account, you agree to our <a href="#" className='text-[#759FF2]'>Terms of Service</a> and <a href="#" className='text-[#759FF2]'>Privacy Policy</a></p>
@@ -152,13 +201,13 @@ const Register = () => {
                 type="submit"
                 className='cursor-pointer h-[50px] text-white font-bold hover:opacity-70 transition-all duration-300 ease-in-out w-full rounded-[8px] bg-[#22D172]'>
                 {pathname === "/register" && !isSubmitting && "Sign Up"}
-                {pathname === "/login" && !isSubmitting && "Log in"}
+                {(pathname === "/login" || pathname === "/") && !isSubmitting && "Log in"}
                 {isSubmitting && <Spinner />}
 
             </button>
             <div className='text-center text-sm mt-1'>
                 <p>Don't have an account yet?</p>
-                <a href="#" className='text-[#759FF2]'>{pathname === "/register" ? "Sign Up" : "Sign Up"}</a>
+                <a href={(pathname === "/" || pathname === "/register") ? "/login" : "/register"} className='text-[#759FF2]'>{pathname === "/register" ? "Sign In" : "Sign Up"}</a>
             </div>
 
         </form>

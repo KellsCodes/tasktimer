@@ -8,7 +8,7 @@ import { EmailVerificationServerError } from './serverError';
 import { useSearchParams } from 'next/navigation';
 
 
-export default function RegisterUser() {
+export default function UserEmailVerification() {
     const [isLoading, setIsLoading] = useState(true)
     const [isEmailVerified, setIsEmailVerified] = useState(false)
     const [isVerificationFailed, setIsVerificationFailed] = useState(false)
