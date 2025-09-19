@@ -11,7 +11,7 @@ export default function SettingsPage() {
         <AuthLayout>
             <div className="flex items-centerr justify-center mt-5 lg:mt-20 ">
                 {/* <h1 className="text-2xl font-bold">Settings</h1> */}
-                <div className="flex flex-col gap-y-5 w-[500px] p-8 rounded-sm shadow-sm">
+                <div className="flex flex-col gap-y-5 w-[500px] p-8 rounded-md shadow-sm">
                     <div className="flex items-center gap-x-4">
                         <div
                             onClick={() => { setActiveTab(0) }}
