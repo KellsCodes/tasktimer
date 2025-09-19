@@ -177,7 +177,6 @@ const Register = () => {
                         name="password"
                         value={form.password}
                         onChange={handleChange}
-                        autoComplete="new-password"
                         className='w-full h-[50px] mt-1 border border-gray-300 rounded-[8px] px-3 focus:outline-none focus:ring-1 focus:ring-[#22D172] transition-all duration-500 ease-in-out'
                     />
                 </label>
@@ -191,7 +190,6 @@ const Register = () => {
                             name="confirm_password"
                             value={form.confirm_password}
                             onChange={handleChange}
-                            autoComplete="new-password"
                             className='w-full h-[50px] mt-1 border border-gray-300 rounded-[8px] px-3 focus:outline-none focus:ring-1 focus:ring-[#22D172] transition-all duration-500 ease-in-out'
                         />
                     </label>
