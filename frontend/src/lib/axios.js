@@ -14,7 +14,7 @@ const api = axios.create({
 // Add Authorization header automatically if token exists
 api.interceptors.request.use(
   (config) => {
-    const accessToken = Cookies.get("accesToken");
+    const accessToken = Cookies.get("accessToken");
 
     if (accessToken && config.headers) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -30,29 +30,38 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log(error);
     const originalRequest = error.config;
-    
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const token = Cookies.get("refreshToken");
       try {
+        const token = Cookies.get("refreshToken");
+        // Make request to auth server to refresh token
         const { data } = await api.post("/refresh-token", {
           refreshToken: token,
         });
-        console.log(data);
-      } catch (refreshError) {
-        console.error({refreshError});
-        if (refreshError.response.status !== 500) {
-          Cookies.remove("accessToken");
-          Cookies.remove("refreshToken");
-          localStorage.removeItem("user");
-          // window.location.href = "/login";
-          return Promise.reject(refreshError);
+
+        const { accessToken, refreshToken } = data;
+        // Set the new tokens on browser cookie
+        Cookies.set("accessToken", accessToken);
+        Cookies.set("refreshToken", refreshToken);
+        // Update the authorization header with the new access token
+        api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        if (originalRequest.url.includes("/logout")) {
+          originalRequest.data = JSON.stringify({ refreshToken });
         }
+
+        return api(originalRequest); // Retry the request with th new access token
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
       }
     }
-    return Promise.reject(error);
+    return Promise.reject(error); // For all other errors, return as is
   }
 );
 

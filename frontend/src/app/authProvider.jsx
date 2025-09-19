@@ -29,19 +29,16 @@ export function UserProvider({ children }) {
     // Logout user function
     const logout = async () => {
         const refreshToken = Cookies.get("refreshToken")
-        // console.log(refreshToken)
         try {
             const { data } = await api.put("/logout", { refreshToken })
             if (data.code === 1) {
                 Cookies.remove("refreshToken")
-                Cookies.remove("accesToken")
+                Cookies.remove("accessToken")
                 localStorage.removeItem("user")
                 window.location.href = "/"
             }
         } catch (error) {
-            // console.error(error)
-            // console.log(error)
-            console.log("error here")
+            console.error(error)
         }
     }
 
