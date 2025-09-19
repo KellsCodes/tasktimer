@@ -84,8 +84,8 @@ const Register = () => {
                      * save access token and refresh token to browser cookie
                      * redirect user to dashboard
                      */
-                    Cookies.set("accessToken", data.accesToken)
-                    Cookies.set("refreshToken", data.refreshToken)
+                    Cookies.set("accessToken", data.accesToken, { expires: 7 })
+                    Cookies.set("refreshToken", data.refreshToken, { expires: 7 })
                     localStorage.setItem("user", JSON.stringify(data.user))
                     setUser(data.user)
                     router.push("/dashboard")

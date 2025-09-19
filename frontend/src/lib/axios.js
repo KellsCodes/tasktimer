@@ -43,8 +43,8 @@ api.interceptors.response.use(
 
         const { accessToken, refreshToken } = data;
         // Set the new tokens on browser cookie
-        Cookies.set("accessToken", accessToken);
-        Cookies.set("refreshToken", refreshToken);
+        Cookies.set("accessToken", accessToken, { expires: 7 });
+        Cookies.set("refreshToken", refreshToken, { expires: 7 });
         // Update the authorization header with the new access token
         api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
         if (originalRequest.url.includes("/logout")) {
