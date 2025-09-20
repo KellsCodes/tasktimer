@@ -20,7 +20,7 @@ const formatDate = (date) => {
     return format(date, 'yyyy-MM-dd')
 }
 
-const Tasks = forwardRef(({ type, data, setIsSubmitting }, ref) => {
+const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) => {
 
     const [open, setOpen] = useState(false)
     const [endTimeOpen, setEndTimeOpen] = useState(false)
@@ -36,6 +36,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting }, ref) => {
     }
 
     const handleSubmit = async () => {
+        if (isSubmitting) return
         if (!formData?.title || !formData?.startDate || !formData?.endDate || typeof formData?.startHour === 'undefined' || typeof formData?.endHour === 'undefined') {
             setMessage("Please enter all fields.")
             setError(true)
@@ -151,7 +152,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting }, ref) => {
                         </SelectTrigger>
                         <SelectContent>
                             {hours.map(hour => (
-                                <SelectItem key={hour} value={hour}>{hour.toString().padStart(2, "0")}:00:00</SelectItem>
+                                <SelectItem key={hour} value={hour}>{hour % 12 === 0 ? "12" : String(hour % 12).padStart(2, "0")}:00 {hour >= 12 ? "PM" : "AM"}</SelectItem>
 
                             ))}
                         </SelectContent>
@@ -210,7 +211,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting }, ref) => {
                         </SelectTrigger>
                         <SelectContent>
                             {hours.map(hour => (
-                                <SelectItem key={hour} value={hour}>{hour.toString().padStart(2, "0")}:00:00</SelectItem>
+                                <SelectItem key={hour} value={hour}>{hour % 12 === 0 ? "12" : String(hour % 12).padStart(2, "0")}:00 {hour >= 12 ? "PM" : "AM"}</SelectItem>
 
                             ))}
                         </SelectContent>

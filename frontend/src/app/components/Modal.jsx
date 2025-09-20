@@ -35,7 +35,7 @@ export function Modal({ props, children }) {
           </DialogDescription>
         </DialogHeader>
 
-        {React.cloneElement(children, { ref: buttonRef, setIsSubmitting })}
+        {React.cloneElement(children, { ref: buttonRef, setIsSubmitting, isSubmitting })}
 
         <DialogFooter>
           <DialogClose asChild>
