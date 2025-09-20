@@ -87,7 +87,7 @@ export const loginUser = async (email, password) => {
   return {
     accessToken,
     refreshToken,
-    user: { id: user.id, email: user.email, username: user.username },
+    user: { id: user.id, email: user.email, username: user.username, firstname: user.profile.firstname, lastname: user.profile.lastname, profileImage: user.profile.profileImage },
   };
 };
 
@@ -107,7 +107,7 @@ export const userLogOut = async (refreshToken, user) => {
     if (!refreshToken) {
       return {
         result: { code: 2, message: "Invalid refreshToken" },
-        statusCode: 404,
+        statusCode: 400,
       };
     }
     // Delete the refreshToken
@@ -123,7 +123,7 @@ export const userLogOut = async (refreshToken, user) => {
 export const generateNewRefreshToken = async (token) => {
   if (!token) {
     return {
-      statusCode: 401,
+      statusCode: 400,
       result: { code: 2, message: "Refresh token is required" },
     };
   }
@@ -138,19 +138,19 @@ export const generateNewRefreshToken = async (token) => {
       };
     }
     return {
-      statusCode: 401,
+      statusCode: 400,
       result: { code: 2, message: "Invalid refresh token." },
     };
   } catch (err) {
     if (err.name === "TokenExpiredError") {
       return {
-        statusCode: 401,
+        statusCode: 400,
         result: { code: 2, message: "Refresh token expired." },
       };
     }
     return {
-      statusCode: 401,
-      result: { code: 3, message: "Invalid refresh token." },
+      statusCode: 400,
+      result: { code: 2, message: "Invalid refresh token." },
     };
   }
 };

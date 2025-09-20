@@ -39,7 +39,7 @@ export const login = async (req, res) => {
     const user = await loginUser(email, password);
     if (user.code === 2) {
       return res
-        .status(401)
+        .status(400)
         .json({ code: 2, message: "Invalid email or password" });
     }
     if (user.code === 3) {
