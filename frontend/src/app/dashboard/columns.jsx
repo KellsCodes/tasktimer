@@ -18,6 +18,14 @@ import {
 import { MdCancel, MdOutlineIncompleteCircle, MdPending } from "react-icons/md"
 import { IoMdCheckbox } from "react-icons/io"
 
+/**
+ * 
+ * @STATUS IDENTIFICATION NUMBER:
+ * 1 === Pending i.e just added task
+ * 2 === Running i.e task has been started by the user
+ * 3 === Completed i.e task has been completed by the user
+ * 4 === Canceled i.e The user discontinued the task
+ */
 
 export const getColumns = (handleOpenModal) => {
     return [
@@ -32,21 +40,21 @@ export const getColumns = (handleOpenModal) => {
                 const data = row.original // row data
                 const status = row.getValue("status")
                 let colorClass = "text-gray-500"
-                if (status === "Completed") {
+                if (status === 3) {
                     colorClass = "text-green-500"
-                } else if (status === "Running") {
+                } else if (status === 2) {
                     colorClass = "text-blue-500"
-                } else if (status === "Pending") {
+                } else if (status === 1) {
                     colorClass = "text-yellow-500"
                 }
                 return (
                     <>
-                        {status === "Completed" ?
+                        {status === 3 ?
                             <div className={`p-1 flex items-center gap-x-1`}>
                                 {
-                                    status === "Completed" ?
+                                    status === 3 ?
                                         <IoMdCheckbox className={`${colorClass} text-[17px]`} /> :
-                                        status === "Running" ?
+                                        status === 2 ?
                                             <MdOutlineIncompleteCircle className={`${colorClass} text-[17px]`} />
                                             :
                                             <MdPending className={`${colorClass} text-[17px]`} />
@@ -60,21 +68,21 @@ export const getColumns = (handleOpenModal) => {
                                         <SelectValue placeholder="Status" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="Pending">
+                                        <SelectItem value={1}>
                                             <MdPending className={`text-yellow-500 text-[17px]`} /> Pending
                                         </SelectItem>
-                                        <SelectItem value="Completed">
-                                            <IoMdCheckbox className={`text-prim text-[17px]`} /> Completed
-                                        </SelectItem>
-                                        <SelectItem value="Running">
+                                        <SelectItem value={2}>
                                             <MdOutlineIncompleteCircle className={`text-blue-500 text-[17px]`} /> Running
                                         </SelectItem>
-                                        <SelectItem value="Canceled">
+                                        <SelectItem value={3}>
+                                            <IoMdCheckbox className={`text-prim text-[17px]`} /> Completed
+                                        </SelectItem>
+                                        <SelectItem value={4}>
                                             <MdCancel className={`text-[17px]`} /> Canceled
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                
+
                             </>
                         }
                     </>
@@ -82,45 +90,51 @@ export const getColumns = (handleOpenModal) => {
             }
         },
         {
-            accessorKey: "startTime",
+            accessorKey: "startAtUTC",
             header: "Start Time",
             cell: ({ row }) => {
-                const startTime = new Date(row.getValue("startTime"))
+                const startTime = new Date(row.getValue("startAtUTC"))
                 return (
                     <span>
                         {startTime.toLocaleString(undefined, {
                             dateStyle: "medium",
                             timeStyle: "short",
+                            hour12: true,
+                            timeZone: row.original.timeZone
                         })}
                     </span>
                 )
             }
         },
         {
-            accessorKey: "endTime",
+            accessorKey: "endAtUTC",
             header: "End Time",
             cell: ({ row }) => {
-                const startTime = new Date(row.getValue("endTime"))
+                const startTime = new Date(row.getValue("endAtUTC"))
                 return (
                     <span>
                         {startTime.toLocaleString(undefined, {
                             dateStyle: "medium",
                             timeStyle: "short",
+                            hour12: true,
+                            timeZone: row.original.timeZone
                         })}
                     </span>
                 )
             }
         },
         {
-            accessorKey: "createAt",
+            accessorKey: "createdAt",
             header: "Date Created",
             cell: ({ row }) => {
-                const startTime = new Date(row.getValue("createAt"))
+                const startTime = new Date(row.getValue("createdAt"))
                 return (
                     <span>
                         {startTime.toLocaleString(undefined, {
                             dateStyle: "medium",
                             timeStyle: "short",
+                            hour12: true,
+                            timeZone: row.original.timeZone
                         })}
                     </span>
                 )
