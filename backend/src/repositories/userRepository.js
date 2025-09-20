@@ -10,6 +10,15 @@ export const createUser = async (userData) => {
 export const getUserByEmail = async (email) => {
   return await prisma.user.findUnique({
     where: { email },
+    include: {
+      profile: {
+        select: {
+          firstname: true,
+          lastname: true,
+          profileImage: true,
+        },
+      },
+    },
   });
 };
 
@@ -84,10 +93,13 @@ export const logOutUser = async (refreshToken, user) => {
       statusCode: 403,
     };
   }
-  await prisma.refreshToken.update({
-    where: { refreshToken },
-    data: { revoked: true, expiresAt: new Date() },
+  await prisma.refreshToken.delete({
+    where: { refreshToken, userId: user.id },
   });
+  // await prisma.refreshToken.update({
+  //   where: { refreshToken },
+  //   data: { revoked: true, expiresAt: new Date() },
+  // });
   return {
     result: { code: 1, message: "Logged out successfully" },
     statusCode: 200,
@@ -108,7 +120,7 @@ export const refreshStoredToken = async (token) => {
     storedToken.userId !== id
   ) {
     return {
-      statusCode: 401,
+      statusCode: 400,
       result: { code: 2, message: "Invalid token." },
     };
   }

@@ -12,11 +12,13 @@ import { sendResetPasswordEmail } from "./mail.service.js";
 
 export const updatePasswordService = async (userId, passwordData) => {
   const validData = updatePasswordSchema.validate(passwordData);
-  if (validData?.error)
+  if (validData?.error){
     return {
       statusCode: 400,
       result: { code: 2, message: validData.error.details[0]["message"] },
     };
+  
+  }
   if (validData.password !== validData.confirmPassword) {
     return {
       statusCode: 400,
@@ -63,7 +65,7 @@ export const updatePasswordService = async (userId, passwordData) => {
     const data = await updateUserPassword(userId, hashedPassword);
     return {
       statusCode: 200,
-      result: { code: 1, message: "password changed successfully." },
+      result: { code: 1, message: "Password changed successfully." },
     };
   } catch (error) {
     return {
