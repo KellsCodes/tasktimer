@@ -20,7 +20,7 @@ const Register = () => {
     });
     const pathname = usePathname()
 
-    const { _, setUser } = useUser()
+    const { setUser } = useUser()
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -84,8 +84,8 @@ const Register = () => {
                      * save access token and refresh token to browser cookie
                      * redirect user to dashboard
                      */
-                    Cookies.set("accesToken", data.accesToken)
-                    Cookies.set("refreshToken", data.refreshToken)
+                    Cookies.set("accessToken", data.accesToken, { expires: 7 })
+                    Cookies.set("refreshToken", data.refreshToken, { expires: 7 })
                     localStorage.setItem("user", JSON.stringify(data.user))
                     setUser(data.user)
                     router.push("/dashboard")
@@ -177,7 +177,6 @@ const Register = () => {
                         name="password"
                         value={form.password}
                         onChange={handleChange}
-                        autoComplete="new-password"
                         className='w-full h-[50px] mt-1 border border-gray-300 rounded-[8px] px-3 focus:outline-none focus:ring-1 focus:ring-[#22D172] transition-all duration-500 ease-in-out'
                     />
                 </label>
@@ -191,7 +190,6 @@ const Register = () => {
                             name="confirm_password"
                             value={form.confirm_password}
                             onChange={handleChange}
-                            autoComplete="new-password"
                             className='w-full h-[50px] mt-1 border border-gray-300 rounded-[8px] px-3 focus:outline-none focus:ring-1 focus:ring-[#22D172] transition-all duration-500 ease-in-out'
                         />
                     </label>

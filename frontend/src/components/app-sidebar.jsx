@@ -46,6 +46,7 @@ const data = {
 export function AppSidebar({
   ...props
 }) {
+  // console.log(props["user"])
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -89,7 +90,7 @@ export function AppSidebar({
       <SidebarRail />
       {/* USER POPUP MENU */}
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
