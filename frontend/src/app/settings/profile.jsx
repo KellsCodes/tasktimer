@@ -60,7 +60,7 @@ export default function ProfilePage() {
                     localStorage.setItem("user", JSON.stringify({ ...user, profileImage: res?.data?.data?.profileImage }))
                 }
             } else {
-                setMessage(res?.data?.message || "An error occurred. Try again.")
+                setMessage(res?.response?.data?.message || "An error occurred. Try again.")
             }
             setError(false)
         } catch (error) {
