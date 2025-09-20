@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/ifeanyi/Desktop/projects/tasktimer/frontend/src/lib/regEx.js"],"sourcesContent":["export const usernameRegEx = /^[a-zA-Z0-9]+$/;\nexport const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9\\s])(?!.*\\s).{8,}$/;\n"],"names":[],"mappings":";;;;;;AAAO,MAAM,gBAAgB;AACtB,MAAM,gBAAgB","debugId":null}}]
-}
