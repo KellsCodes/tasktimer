@@ -98,7 +98,7 @@ export default function Page() {
               }
             }}
             >
-              <Tasks type="edit" data={selectedRow} />
+              <Tasks type="edit" data={selectedRow} setData={setData} />
             </Modal>
           }
         </div>

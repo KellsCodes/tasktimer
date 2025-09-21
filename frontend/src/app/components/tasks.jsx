@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
-import { forwardRef, useImperativeHandle, useState } from "react"
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 
 import { ChevronDownIcon } from "lucide-react"
 
@@ -20,7 +20,7 @@ const formatDate = (date) => {
     return format(date, 'yyyy-MM-dd')
 }
 
-const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) => {
+const Tasks = forwardRef(({ type, data, setData, setIsSubmitting, isSubmitting }, ref) => {
 
     const [open, setOpen] = useState(false)
     const [endTimeOpen, setEndTimeOpen] = useState(false)
@@ -63,6 +63,12 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) =>
                     const res = (type && type === "edit") ? await api.put("/update-task", userTask) : await api.post("/add-task", userTask)
                     if (res?.data?.code === 1 || res.status === 200) {
                         // set the task to task array
+                        console.log(res.data.data)
+                        if (type === "edit" && data.id) {
+                            setData(prev => prev.map(task => data.id === task.id ? res.data.data : task))
+                        } else {
+                            setData(prev => [res.data.data, ...prev])
+                        }
                         setError(false)
                         setMessage(res?.data?.message)
                     } else {
@@ -84,6 +90,12 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) =>
     useImperativeHandle(ref, () => ({
         handleSubmit
     }))
+
+    useEffect(() => {
+        if (type === "edit" && data) {
+            setFormData({ ...data })
+        }
+    }, [])
     return (
         <div className="grid gap-y-7">
             <div className="grid gap-2">
@@ -112,7 +124,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) =>
                                 variant="outline"
                                 id="startDate"
                                 name="startDate"
-                                className="w-full justify-between font-normal opacity-60"
+                                className={`w-full justify-between font-normal ${!formData?.startDate && "opacity-60"}`}
                             >
                                 {formData?.startDate ? formData?.startDate : "Select date"}
                                 <ChevronDownIcon />
@@ -171,7 +183,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) =>
                             <Button
                                 variant="outline"
                                 id="endDate"
-                                className="w-full justify-between font-normal opacity-60"
+                                className={`w-full justify-between font-normal ${!formData?.endDate && "opacity-60"}`}
                             >
                                 {formData?.endDate ? formData?.endDate : "Select date"}
                                 <ChevronDownIcon />
