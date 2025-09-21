@@ -32,14 +32,14 @@ const statusOptionSelect = (status) => {
     const selections = values.filter(value => value >= status).map(statusNumber => {
         if (statusNumber === 1) return <SelectItem key={statusNumber} value={statusNumber}><MdPending className={`text-yellow-500 text-[17px]`} /> Pending</SelectItem>
         if (statusNumber === 2) return <SelectItem key={statusNumber} value={statusNumber}><MdOutlineIncompleteCircle className={`text-blue-500 text-[17px]`} /> Running</SelectItem>
-        if (statusNumber === 3) return <SelectItem key={statusNumber} value={statusNumber}><IoMdCheckbox className={`text-prim text-[17px]`} /> Completed</SelectItem>
-        if (status === 1 || status === 2 || status === 4) return <SelectItem key={statusNumber} value={statusNumber}><MdCancel className={`text-[17px]`} /> Cancel</SelectItem>
+        if (statusNumber === 3) return <SelectItem key={statusNumber} value={statusNumber}><IoMdCheckbox className={`text-prim text-[17px]`} /> {status === 3 ? "Completed" : "Complete"}</SelectItem>
+        if (status === 1 || status === 2 || status === 4) return <SelectItem key={statusNumber} value={statusNumber}><MdCancel className={`text-[17px]`} /> {status === 4 ? "Cancelled" : "Cancel"}</SelectItem>
     })
     return selections
 
 }
 
-export const getColumns = (handleOpenModal, handleUpdateTaskStatus) => {
+export const getColumns = (handleOpenModal, handleUpdateTaskStatus, handleDeleteTask) => {
     return [
         {
             accessorKey: "title",
@@ -146,7 +146,7 @@ export const getColumns = (handleOpenModal, handleUpdateTaskStatus) => {
                                     }
                                     {[1, 2, 4].includes(data.status) ?
                                         <DropdownMenuItem
-                                            onClick={() => console.log("Delete:", data.id)}
+                                            onClick={() => handleDeleteTask(data.id)}
                                             className="text-red-500"
                                         >
                                             Delete

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import AuthLayout from "../components/AuthLayout";
 import { getColumns } from "./columns";
-import getData from "./data";
 import { DataTable } from "./data-table"
 import SortTable from "./sort-table";
 import { Modal } from "../components/Modal";
@@ -50,7 +49,6 @@ export default function Page() {
     try {
       const res = await api.put("/update-task", { ...task, status: newStatus })
       if (res.status === 200 || res.data.code === 1) {
-        console.log(res.data.data)
         setData(prev => prev.map(prevTask => prevTask.id === res.data.data.id ? { ...task, status: newStatus } : prevTask))
       } else {
         setData(prev => prev.map(prevTask => prevTask.id === task.id ? { ...task, status: prevStatus } : prevTask))
@@ -61,11 +59,23 @@ export default function Page() {
     }
   }
 
+  const handleDeleteTask = async (taskId) => {
+    if (!taskId) return
+    try {
+      const res = await api.delete("/delete-task", { data: { id: taskId } })
+      if (res.status === 200 || res.data?.code === 1) {
+        setData(prev => prev.filter(task => task.id !== taskId))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // get task localhost:5001/api/v1/get-tasks?page=1&pageSize=3
+  // search for task localhost:5001/api/v1/get-tasks?page=1&pageSize=3&search=xender
+  // filter task localhost:5001/api/v1/filter-tasks?pageSize=3&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
+
   useEffect(() => {
-    // (async () => {
-    //   let data = await getData();
-    //   setData(data)
-    // })()
     handleFetchTasks()
   }, [])
 
@@ -79,7 +89,7 @@ export default function Page() {
           <div className="grid auto-rows-min gap-4 ">
             <SortTable />
           </div>
-          <DataTable columns={getColumns(handleOpenModal, handleUpdateTaskStatus)} data={data} />
+          <DataTable columns={getColumns(handleOpenModal, handleUpdateTaskStatus, handleDeleteTask)} data={data} />
           {openModal &&
             <Modal props={{
               open: openModal, onOpenChange: () => {
