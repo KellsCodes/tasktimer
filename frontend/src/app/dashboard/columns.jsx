@@ -137,7 +137,6 @@ export const getColumns = (handleOpenModal, handleUpdateTaskStatus, handleDelete
                                 <DropdownMenuContent align="end">
                                     {data.status === 1 ?
                                         <DropdownMenuItem onClick={() => {
-                                            // console.log("Edit:", data)
                                             handleOpenModal(data)
                                         }}
                                         >

@@ -19,17 +19,30 @@ import {
 import { MdFilterListAlt } from "react-icons/md";
 import { useState } from "react"
 
-export default function SortTable() {
+export default function SortTable({ searchQuery, router }) {
   const [createdAtFrom, setCreatedAtFrom] = useState(undefined)
   const [openCreatedAtFrom, setOpenCreatedAtFrom] = useState(false)
   const [createdAtTo, setCreatedAtTo] = useState(undefined)
   const [openCreatedAtTo, setOpenCreatedAtTo] = useState(false)
+  const [search, setSearch] = useState(searchQuery || "")
+
+  const handleSearchTask = async (e) => {
+    // e.preventDefault()
+    const uuid = window.crypto.randomUUID()
+    router.push(`/dashboard?pageuid=${uuid}&page=${1}&search=${search}`)
+  }
   return (
     <div className="font-sans flex flex-col lg:flex-row lg:items-center justify-between w-full p-4 gap-x-10 bg-white border border-gray-100 rounded-lg shadow-sm md:overflow-x-auto">
-      <form action="#" className="flex items-center justify-between  rounded-md w-full lg:min-w-[400px] lg:max-w-[400px] mb-5 lg:mb-0">
+      <form
+        onSubmit={handleSearchTask}
+        action="#"
+        className="flex items-center justify-between  rounded-md w-full lg:min-w-[400px] lg:max-w-[400px] mb-5 lg:mb-0"
+      >
         <input
           type="search"
           placeholder="Search..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
           className="px-2 focus:outline-none focus:border-t focus:border-b focus:border-l h-[40px] rounded-l rounded-l-md w-[calc(100%-50px)] placeholder:text-sm border-t border-b border-l"
         />
         <button className="bg-prim font-xs font-bold text-white h-[40px] px-3 rounded-r rounded-r-md cursor-pointer">Search</button>

@@ -17,7 +17,6 @@ import { Spinner } from "./spinner";
 export function Modal({ props, children }) {
   const buttonRef = useRef(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  // console.log(props);
 
   const handleSaveTask = () => {
     if (buttonRef.current) {

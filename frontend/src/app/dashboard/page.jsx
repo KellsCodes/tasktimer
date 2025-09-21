@@ -8,13 +8,16 @@ import { Modal } from "../components/Modal";
 import Tasks from "../components/tasks";
 import api from "@/lib/axios";
 import { Spinner } from "../components/spinner";
+import { useRouter, useSearchParams } from "next/navigation"
 
 export default function Page() {
   const [data, setData] = useState([]);
-  const [pageParams, setPageParams] = useState({ currentPage: 1 })
+  const [pageParams, setPageParams] = useState({ currentPage: useSearchParams().get("page") || 1 })
   const [isLoading, setIsLoading] = useState(true)
   const [openModal, setOpenModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const router = useRouter()
+  const search = useSearchParams().get("search")
 
   const handleOpenModal = (rowData) => {
     if (openModal) setSelectedRow(null)
@@ -25,11 +28,25 @@ export default function Page() {
   const handleFetchTasks = async () => {
 
     try {
-      const res = await api.get("/get-tasks")
+      const res = await api.get(`/get-tasks?page=${pageParams.currentPage}&pageSize=15`)
       if (res?.data?.code === 1 || res?.status === 200) {
         setData(res.data?.data?.data || [])
         delete res.data?.data?.data
         setPageParams({ ...res.data?.data })
+      } else {
+        setData([])
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    setIsLoading(false)
+  }
+
+  const handleSearchTask = async () => {
+    try {
+      const res = await api.get(`get-tasks?page=${pageParams.currentPage}&pageSize=15&search=${search}`)
+      if (res.status === 200) {
+        setData(res.data?.data?.data)
       } else {
         setData([])
       }
@@ -67,7 +84,7 @@ export default function Page() {
         setData(prev => prev.filter(task => task.id !== taskId))
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -76,7 +93,11 @@ export default function Page() {
   // filter task localhost:5001/api/v1/filter-tasks?pageSize=3&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
 
   useEffect(() => {
-    handleFetchTasks()
+    if (search) {
+      handleSearchTask()
+    } else {
+      handleFetchTasks()
+    }
   }, [])
 
   return (
@@ -87,7 +108,7 @@ export default function Page() {
       {data.length && (
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="grid auto-rows-min gap-4 ">
-            <SortTable />
+            <SortTable setData={setData} router={router} searchQuery={search} />
           </div>
           <DataTable columns={getColumns(handleOpenModal, handleUpdateTaskStatus, handleDeleteTask)} data={data} />
           {openModal &&
