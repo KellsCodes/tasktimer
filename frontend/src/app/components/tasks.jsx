@@ -112,7 +112,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) =>
                                 variant="outline"
                                 id="startDate"
                                 name="startDate"
-                                className="w-full justify-between font-normal"
+                                className="w-full justify-between font-normal opacity-60"
                             >
                                 {formData?.startDate ? formData?.startDate : "Select date"}
                                 <ChevronDownIcon />
@@ -148,7 +148,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) =>
                         id="startHour"
                     >
                         <SelectTrigger className="w-full lg:w-[150px]">
-                            <SelectValue placeholder="Select hour (0-23)" />
+                            <SelectValue placeholder="Select hour" />
                         </SelectTrigger>
                         <SelectContent>
                             {hours.map(hour => (
@@ -171,7 +171,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) =>
                             <Button
                                 variant="outline"
                                 id="endDate"
-                                className="w-full justify-between font-normal"
+                                className="w-full justify-between font-normal opacity-60"
                             >
                                 {formData?.endDate ? formData?.endDate : "Select date"}
                                 <ChevronDownIcon />
@@ -207,7 +207,7 @@ const Tasks = forwardRef(({ type, data, setIsSubmitting, isSubmitting }, ref) =>
                         id="endHour"
                     >
                         <SelectTrigger className="w-full lg:w-[150px]">
-                            <SelectValue placeholder="Select hour (0-23)" />
+                            <SelectValue placeholder="Select hour" />
                         </SelectTrigger>
                         <SelectContent>
                             {hours.map(hour => (

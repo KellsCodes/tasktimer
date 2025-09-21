@@ -27,7 +27,19 @@ import { IoMdCheckbox } from "react-icons/io"
  * 4 === Canceled i.e The user discontinued the task
  */
 
-export const getColumns = (handleOpenModal) => {
+const statusOptionSelect = (status) => {
+    const values = [1, 2, 3, 4]
+    const selections = values.filter(value => value >= status).map(statusNumber => {
+        if (statusNumber === 1) return <SelectItem key={statusNumber} value={statusNumber}><MdPending className={`text-yellow-500 text-[17px]`} /> Pending</SelectItem>
+        if (statusNumber === 2) return <SelectItem key={statusNumber} value={statusNumber}><MdOutlineIncompleteCircle className={`text-blue-500 text-[17px]`} /> Running</SelectItem>
+        if (statusNumber === 3) return <SelectItem key={statusNumber} value={statusNumber}><IoMdCheckbox className={`text-prim text-[17px]`} /> Completed</SelectItem>
+        if (status === 1 || status === 2 || status === 4) return <SelectItem key={statusNumber} value={statusNumber}><MdCancel className={`text-[17px]`} /> Cancel</SelectItem>
+    })
+    return selections
+
+}
+
+export const getColumns = (handleOpenModal, handleUpdateTaskStatus) => {
     return [
         {
             accessorKey: "title",
@@ -37,61 +49,29 @@ export const getColumns = (handleOpenModal) => {
             accessorKey: "status",
             header: "Status",
             cell: ({ row }) => {
-                const data = row.original // row data
                 const status = row.getValue("status")
-                let colorClass = "text-gray-500"
-                if (status === 3) {
-                    colorClass = "text-green-500"
-                } else if (status === 2) {
-                    colorClass = "text-blue-500"
-                } else if (status === 1) {
-                    colorClass = "text-yellow-500"
-                }
                 return (
-                    <>
-                        {status === 3 ?
-                            <div className={`p-1 flex items-center gap-x-1`}>
-                                {
-                                    status === 3 ?
-                                        <IoMdCheckbox className={`${colorClass} text-[17px]`} /> :
-                                        status === 2 ?
-                                            <MdOutlineIncompleteCircle className={`${colorClass} text-[17px]`} />
-                                            :
-                                            <MdPending className={`${colorClass} text-[17px]`} />
-                                }
-
-                                <span className={`text-xs`}>{status}</span>
-                            </div> :
-                            <>
-                                <Select defaultValue={status}>
-                                    <SelectTrigger className="w-full lg:w-[155px]">
-                                        <SelectValue placeholder="Status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value={1}>
-                                            <MdPending className={`text-yellow-500 text-[17px]`} /> Pending
-                                        </SelectItem>
-                                        <SelectItem value={2}>
-                                            <MdOutlineIncompleteCircle className={`text-blue-500 text-[17px]`} /> Running
-                                        </SelectItem>
-                                        <SelectItem value={3}>
-                                            <IoMdCheckbox className={`text-prim text-[17px]`} /> Completed
-                                        </SelectItem>
-                                        <SelectItem value={4}>
-                                            <MdCancel className={`text-[17px]`} /> Canceled
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-
-                            </>
+                    <Select
+                        defaultValue={status}
+                        onValueChange={(value) => {
+                            if (row.original.status === 2 && value === 1) return
+                            handleUpdateTaskStatus(row.original, value)
                         }
-                    </>
+                        }
+                    >
+                        <SelectTrigger className="w-full lg:min-w-[155px] lg:max-w-[155px]">
+                            <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {statusOptionSelect(status)}
+                        </SelectContent>
+                    </Select>
                 )
             }
         },
         {
             accessorKey: "startAtUTC",
-            header: "Start Time",
+            header: "Starts",
             cell: ({ row }) => {
                 const startTime = new Date(row.getValue("startAtUTC"))
                 return (
@@ -108,7 +88,7 @@ export const getColumns = (handleOpenModal) => {
         },
         {
             accessorKey: "endAtUTC",
-            header: "End Time",
+            header: "Ends",
             cell: ({ row }) => {
                 const startTime = new Date(row.getValue("endAtUTC"))
                 return (
@@ -125,7 +105,7 @@ export const getColumns = (handleOpenModal) => {
         },
         {
             accessorKey: "createdAt",
-            header: "Date Created",
+            header: "Created",
             cell: ({ row }) => {
                 const startTime = new Date(row.getValue("createdAt"))
                 return (
@@ -146,28 +126,36 @@ export const getColumns = (handleOpenModal) => {
             cell: ({ row }) => {
                 const data = row.original // row data
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => {
-                                // console.log("Edit:", data)
-                                handleOpenModal(data)
-                            }}
-                            >
-                                Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() => console.log("Delete:", data.id)}
-                                className="text-red-500"
-                            >
-                                Delete
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <>
+                        {data.status !== 3 ?
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    {data.status === 1 ?
+                                        <DropdownMenuItem onClick={() => {
+                                            // console.log("Edit:", data)
+                                            handleOpenModal(data)
+                                        }}
+                                        >
+                                            Edit
+                                        </DropdownMenuItem> : null
+                                    }
+                                    {[1, 2, 4].includes(data.status) ?
+                                        <DropdownMenuItem
+                                            onClick={() => console.log("Delete:", data.id)}
+                                            className="text-red-500"
+                                        >
+                                            Delete
+                                        </DropdownMenuItem> : null
+                                    }
+                                </DropdownMenuContent>
+                            </DropdownMenu> : null
+                        }
+                    </>
                 )
             },
         },

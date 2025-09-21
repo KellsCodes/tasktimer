@@ -40,6 +40,27 @@ export default function Page() {
     setIsLoading(false)
   }
 
+  const handleUpdateTaskStatus = async (task, newStatus) => {
+    if ((task.status !== 1 && task.status !== 2)
+      || (task.status === 2 && newStatus === 1)
+      || (task.status === 1 && newStatus === 1)
+      || (task.status === 2 && newStatus === 2)) return // we can display error later for nice user experience
+    const prevStatus = task.status
+    setData(prev => prev.map(prevTask => prevTask.id === task.id ? { ...task, status: newStatus } : prevTask))
+    try {
+      const res = await api.put("/update-task", { ...task, status: newStatus })
+      if (res.status === 200 || res.data.code === 1) {
+        console.log(res.data.data)
+        setData(prev => prev.map(prevTask => prevTask.id === res.data.data.id ? { ...task, status: newStatus } : prevTask))
+      } else {
+        setData(prev => prev.map(prevTask => prevTask.id === task.id ? { ...task, status: prevStatus } : prevTask))
+      }
+    } catch (error) {
+      console.error(error)
+      setData(prev => prev.map(prevTask => prevTask.id === task.id ? { ...task, status: prevStatus } : prevTask))
+    }
+  }
+
   useEffect(() => {
     // (async () => {
     //   let data = await getData();
@@ -58,7 +79,7 @@ export default function Page() {
           <div className="grid auto-rows-min gap-4 ">
             <SortTable />
           </div>
-          <DataTable columns={getColumns(handleOpenModal)} data={data} />
+          <DataTable columns={getColumns(handleOpenModal, handleUpdateTaskStatus)} data={data} />
           {openModal &&
             <Modal props={{
               open: openModal, onOpenChange: () => {
