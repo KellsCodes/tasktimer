@@ -63,11 +63,10 @@ const Tasks = forwardRef(({ type, data, setData, setIsSubmitting, isSubmitting }
                     const res = (type && type === "edit") ? await api.put("/update-task", userTask) : await api.post("/add-task", userTask)
                     if (res?.data?.code === 1 || res.status === 200) {
                         // set the task to task array
-                        console.log(res.data.data)
                         if (type === "edit" && data.id) {
-                            setData(prev => prev.map(task => data.id === task.id ? res.data.data : task))
+                            setData(prev => prev.map(task => data.id === task.id ? res.data.data : task).sort((a, b) => new Date(a.startAtUTC).getTime() - new Date(b.startAtUTC).getTime()))
                         } else {
-                            setData(prev => [res.data.data, ...prev])
+                            setData(prev => [res.data.data, ...prev].sort((a, b) => new Date(a.startAtUTC).getTime() - new Date(b.startAtUTC).getTime()))
                         }
                         setError(false)
                         setMessage(res?.data?.message)

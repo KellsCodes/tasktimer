@@ -80,7 +80,7 @@ export default function Page() {
   }, [])
 
   return (
-    <AuthLayout>
+    <AuthLayout setData={setData}>
       {isLoading && <div className="w-full h-full flex items-center justify-center">
         <Spinner spinnerColor={"border-prim"} />
       </div>}
