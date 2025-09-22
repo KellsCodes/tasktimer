@@ -20,7 +20,7 @@ import { Modal } from "./Modal";
 import { useState } from "react";
 import Tasks from "./tasks";
 
-export default function AuthLayout({ children }) {
+export default function AuthLayout({ children, setData }) {
     const pathname = usePathname()
     const [open, setOpenChange] = useState(false);
     return (
@@ -57,7 +57,7 @@ export default function AuthLayout({ children }) {
                 {children}
                 {open &&
                     <Modal props={{ open: open, onOpenChange: () => { setOpenChange(prev => !prev) } }}>
-                        <Tasks type="create" data={null} />
+                        <Tasks type="create" data={null} setData={setData} />
                     </Modal>
                 }
             </SidebarInset>

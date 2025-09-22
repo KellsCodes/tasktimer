@@ -9,13 +9,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { Spinner } from "./spinner";
 
 
 
 export function Modal({ props, children }) {
   const buttonRef = useRef(null)
-  // console.log(props);
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSaveTask = () => {
     if (buttonRef.current) {
@@ -33,7 +34,7 @@ export function Modal({ props, children }) {
           </DialogDescription>
         </DialogHeader>
 
-        {React.cloneElement(children, { ref: buttonRef })}
+        {React.cloneElement(children, { ref: buttonRef, setIsSubmitting, isSubmitting })}
 
         <DialogFooter>
           <DialogClose asChild>
@@ -44,7 +45,9 @@ export function Modal({ props, children }) {
             className={"bg-green-500 hover:bg-prim cursor-pointer hover:opacity-70 transition-all duration-300 ease-in-out"}
             onClick={handleSaveTask}
           >
-            Save changes
+            {isSubmitting ? <Spinner /> :
+              "Save changes"
+            }
           </Button>
         </DialogFooter>
       </DialogContent>

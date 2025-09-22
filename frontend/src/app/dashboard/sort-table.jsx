@@ -19,23 +19,36 @@ import {
 import { MdFilterListAlt } from "react-icons/md";
 import { useState } from "react"
 
-export default function SortTable() {
-  const [createdAtFrom, setCreatedAtFrom] = useState(undefined)
-  const [openCreatedAtFrom, setOpenCreatedAtFrom] = useState(false)
+export default function SortTable({ searchQuery, router }) {
+  const [starts, setStarts] = useState(undefined)
+  const [openstarts, setOpenstarts] = useState(false)
   const [createdAtTo, setCreatedAtTo] = useState(undefined)
   const [openCreatedAtTo, setOpenCreatedAtTo] = useState(false)
+  const [search, setSearch] = useState(searchQuery || "")
+
+  const handleSearchTask = async (e) => {
+    // e.preventDefault()
+    const uuid = window.crypto.randomUUID()
+    router.push(`/dashboard?pageuid=${uuid}&page=${1}&search=${search}`)
+  }
   return (
     <div className="font-sans flex flex-col lg:flex-row lg:items-center justify-between w-full p-4 gap-x-10 bg-white border border-gray-100 rounded-lg shadow-sm md:overflow-x-auto">
-      <form action="#" className="flex items-center justify-between  rounded-md w-full lg:min-w-[400px] lg:max-w-[400px] mb-5 lg:mb-0">
+      <form
+        onSubmit={handleSearchTask}
+        action="#"
+        className="flex items-center justify-between  rounded-md w-full lg:min-w-[400px] lg:max-w-[400px] mb-5 lg:mb-0"
+      >
         <input
           type="search"
           placeholder="Search..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
           className="px-2 focus:outline-none focus:border-t focus:border-b focus:border-l h-[40px] rounded-l rounded-l-md w-[calc(100%-50px)] placeholder:text-sm border-t border-b border-l"
         />
         <button className="bg-prim font-xs font-bold text-white h-[40px] px-3 rounded-r rounded-r-md cursor-pointer">Search</button>
       </form>
 
-      <div className="w-full lg:w-auto flex flex-col lg:flex-row items-center gap-x-2 gap-y-3 lg:gap-y-0">
+      <div className="w-full lg:w-auto flex flex-col lg:flex-row items-center gap-x-2 lg:gap-x-5 gap-y-3 lg:gap-y-0">
         <Select>
           <SelectTrigger className="w-full lg:w-[150px]">
             <SelectValue placeholder="Status" />
@@ -44,42 +57,42 @@ export default function SortTable() {
             <SelectItem value="Pending">Pending</SelectItem>
             <SelectItem value="Completed">Completed</SelectItem>
             <SelectItem value="Running">Running</SelectItem>
-            <SelectItem value="Canceled">Canceled</SelectItem>
+            <SelectItem value="Canceled">Cancelled</SelectItem>
           </SelectContent>
         </Select>
 
-        <div className="w-full lg:w-[250px] flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-x-3 text-xs lg:h-[40px]">
-          <Label htmlFor="start" className="px-1 min-w-[100px]">
-            Created from:
+        <div className="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-x-3 text-xs lg:h-[40px]">
+          <Label htmlFor="start" className="px-1">
+            Starts:
           </Label>
-          <Popover open={openCreatedAtFrom} onOpenChange={setOpenCreatedAtFrom}>
+          <Popover open={openstarts} onOpenChange={setOpenstarts}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 id="start"
                 className="font-normal text-gray-700 lg:h-full"
               >
-                {createdAtFrom ? createdAtFrom.toLocaleDateString() : "Select date"}
+                {starts ? starts.toLocaleDateString() : "Select date"}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto overflow-hidden p-0" align="start">
               <Calendar
                 mode="single"
-                selected={createdAtFrom}
+                selected={starts}
                 captionLayout="dropdown"
-                onSelect={(createdAtFrom) => {
-                  setCreatedAtFrom(createdAtFrom)
-                  setOpenCreatedAtFrom(false)
+                onSelect={(starts) => {
+                  setStarts(starts)
+                  setOpenstarts(false)
                 }}
               />
             </PopoverContent>
           </Popover>
         </div>
 
-        <div className="w-full lg:w-[180px] flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-x-3 text-xs lg:h-[40px]">
+        <div className="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-x-3 text-xs lg:h-[40px]">
           <Label htmlFor="end" className="px-1">
-            To:
+            Ends:
           </Label>
           <Popover open={openCreatedAtTo} onOpenChange={setOpenCreatedAtTo}>
             <PopoverTrigger asChild>
