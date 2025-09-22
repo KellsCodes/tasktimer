@@ -26,7 +26,8 @@ export const addTaskService = async (userId, task) => {
       res.status === 1 &&
       value.status !== 1 &&
       value.status !== 2 &&
-      value.status !== 3
+      value.status !== 3 &&
+      value.status !== 4
     ) {
       return {
         statusCode: 400,
@@ -37,7 +38,7 @@ export const addTaskService = async (userId, task) => {
         },
       };
     }
-    if (res.status === 2 && value.status !== 3) {
+    if (res.status === 2 && value.status !== 3 && value.status !== 4) {
       return {
         statusCode: 400,
         result: {
@@ -102,19 +103,7 @@ export const addTaskService = async (userId, task) => {
         message: `${
           value.id ? "Task updated successfully." : "Task added successfully."
         }`,
-        data: {
-          id: data.id,
-          title: data.title,
-          status: data.status,
-          userId: data.userId,
-          timeZone: data.timeZone,
-          startDate: data.localStartDate,
-          endDate: data.localEndDate,
-          startHour: data.localStartHour,
-          endHour: data.localEndHour,
-          createdAt: data.createdAt,
-          updatedAt: data.updatedAt,
-        },
+        data: transformData(data),
       },
     };
   } catch (error) {

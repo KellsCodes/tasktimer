@@ -74,7 +74,7 @@ export const getTasks = async (
       skip,
       take,
       orderBy: {
-        startAt: "desc",
+        startAt: "asc",
       },
     }),
     prisma.tasks.count({ where }),
