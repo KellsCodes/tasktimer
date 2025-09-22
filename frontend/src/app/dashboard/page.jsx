@@ -102,10 +102,12 @@ export default function Page() {
 
   return (
     <AuthLayout setData={setData}>
-      {isLoading && <div className="w-full h-full flex items-center justify-center">
-        <Spinner spinnerColor={"border-prim"} />
-      </div>}
-      {data.length && (
+      {isLoading ?
+        <div className="w-full h-full flex items-center justify-center">
+          <Spinner spinnerColor={"border-prim"} />
+        </div> : null
+      }
+      {data.length >= 1 ? (
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="grid auto-rows-min gap-4 ">
             <SortTable setData={setData} router={router} searchQuery={search} />
@@ -123,7 +125,7 @@ export default function Page() {
             </Modal>
           }
         </div>
-      )}
+      ) : null}
     </AuthLayout>
   );
 }

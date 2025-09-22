@@ -20,8 +20,8 @@ import { MdFilterListAlt } from "react-icons/md";
 import { useState } from "react"
 
 export default function SortTable({ searchQuery, router }) {
-  const [createdAtFrom, setCreatedAtFrom] = useState(undefined)
-  const [openCreatedAtFrom, setOpenCreatedAtFrom] = useState(false)
+  const [starts, setStarts] = useState(undefined)
+  const [openstarts, setOpenstarts] = useState(false)
   const [createdAtTo, setCreatedAtTo] = useState(undefined)
   const [openCreatedAtTo, setOpenCreatedAtTo] = useState(false)
   const [search, setSearch] = useState(searchQuery || "")
@@ -48,7 +48,7 @@ export default function SortTable({ searchQuery, router }) {
         <button className="bg-prim font-xs font-bold text-white h-[40px] px-3 rounded-r rounded-r-md cursor-pointer">Search</button>
       </form>
 
-      <div className="w-full lg:w-auto flex flex-col lg:flex-row items-center gap-x-2 gap-y-3 lg:gap-y-0">
+      <div className="w-full lg:w-auto flex flex-col lg:flex-row items-center gap-x-2 lg:gap-x-5 gap-y-3 lg:gap-y-0">
         <Select>
           <SelectTrigger className="w-full lg:w-[150px]">
             <SelectValue placeholder="Status" />
@@ -57,42 +57,42 @@ export default function SortTable({ searchQuery, router }) {
             <SelectItem value="Pending">Pending</SelectItem>
             <SelectItem value="Completed">Completed</SelectItem>
             <SelectItem value="Running">Running</SelectItem>
-            <SelectItem value="Canceled">Canceled</SelectItem>
+            <SelectItem value="Canceled">Cancelled</SelectItem>
           </SelectContent>
         </Select>
 
-        <div className="w-full lg:w-[250px] flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-x-3 text-xs lg:h-[40px]">
-          <Label htmlFor="start" className="px-1 min-w-[100px]">
-            Created from:
+        <div className="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-x-3 text-xs lg:h-[40px]">
+          <Label htmlFor="start" className="px-1">
+            Starts:
           </Label>
-          <Popover open={openCreatedAtFrom} onOpenChange={setOpenCreatedAtFrom}>
+          <Popover open={openstarts} onOpenChange={setOpenstarts}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 id="start"
                 className="font-normal text-gray-700 lg:h-full"
               >
-                {createdAtFrom ? createdAtFrom.toLocaleDateString() : "Select date"}
+                {starts ? starts.toLocaleDateString() : "Select date"}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto overflow-hidden p-0" align="start">
               <Calendar
                 mode="single"
-                selected={createdAtFrom}
+                selected={starts}
                 captionLayout="dropdown"
-                onSelect={(createdAtFrom) => {
-                  setCreatedAtFrom(createdAtFrom)
-                  setOpenCreatedAtFrom(false)
+                onSelect={(starts) => {
+                  setStarts(starts)
+                  setOpenstarts(false)
                 }}
               />
             </PopoverContent>
           </Popover>
         </div>
 
-        <div className="w-full lg:w-[180px] flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-x-3 text-xs lg:h-[40px]">
+        <div className="w-full lg:w-auto flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-x-3 text-xs lg:h-[40px]">
           <Label htmlFor="end" className="px-1">
-            To:
+            Ends:
           </Label>
           <Popover open={openCreatedAtTo} onOpenChange={setOpenCreatedAtTo}>
             <PopoverTrigger asChild>
