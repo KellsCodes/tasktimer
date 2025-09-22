@@ -18,6 +18,9 @@ export default function Page() {
   const [selectedRow, setSelectedRow] = useState(null);
   const router = useRouter()
   const search = useSearchParams().get("search")
+  const status = useSearchParams().get("status")
+  const startDate = useSearchParams().get("startDate")
+  const endDate = useSearchParams().get("endDate")
 
   const handleOpenModal = (rowData) => {
     if (openModal) setSelectedRow(null)
@@ -50,6 +53,34 @@ export default function Page() {
       } else {
         setData([])
       }
+    } catch (error) {
+      console.log(error)
+    }
+    setIsLoading(false)
+  }
+
+  const handleTaskFilter = async () => {
+    // filter-tasks?pageSize=3&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
+    if (!status && !startDate && !endDate) return
+    let apiURL = `/filter-tasks?pageSize=15&page=${pageParams.currentPage}`
+    if (status) {
+      apiURL += `&status=${status}`
+    }
+    if (startDate) {
+      apiURL += `&startDate=${startDate}`
+    }
+    if (endDate) {
+      apiURL += `&endDate=${endDate}`
+    }
+    try {
+      const res = await api.get(apiURL)
+      console.log(res)
+      if (res.status === 200) {
+        setData(res.data?.data?.data)
+      } else {
+        setData([])
+      }
+
     } catch (error) {
       console.log(error)
     }
@@ -95,6 +126,8 @@ export default function Page() {
   useEffect(() => {
     if (search) {
       handleSearchTask()
+    } else if (status || startDate || endDate) {
+      handleTaskFilter()
     } else {
       handleFetchTasks()
     }
@@ -110,7 +143,14 @@ export default function Page() {
       {data.length >= 1 ? (
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="grid auto-rows-min gap-4 ">
-            <SortTable setData={setData} router={router} searchQuery={search} />
+            <SortTable
+              setData={setData}
+              router={router}
+              searchQuery={search}
+              filterStatus={status}
+              taskStarts={startDate}
+              taskEnds={endDate}
+            />
           </div>
           <DataTable columns={getColumns(handleOpenModal, handleUpdateTaskStatus, handleDeleteTask)} data={data} />
           {openModal &&

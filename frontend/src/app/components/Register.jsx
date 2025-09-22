@@ -77,7 +77,7 @@ const Register = () => {
                     password: form.password
                 })
                 if (data.code === 3) {
-                    setError("Email not verified. " + data.message);
+                    setError("Email not yet verified. An " + data.message.toLowerCase() + ". Please check your inbox or spam folder.");
                 } else {
                     /**
                      * Save user data to local storage and context
@@ -118,7 +118,7 @@ const Register = () => {
             </div>
             <div className='space-y-3'>
                 <button
-                    className='w-full flex items-center justify-center gap-x-3 h-[50px] border p-3 rounded-[6px] font-medium text-sm hover:bg-[#23374C] hover:text-white transition-all duration-500 ease-in-out cursor-pointer'
+                    className='w-full flex items-center justify-center gap-x-3 h-[50px] border p-3 rounded-[6px] font-medium text-sm hover:bg-[#23374C] hover:text-white transition-all duration-800 ease-in-out cursor-pointer'
                 >
                     <FcGoogle className='text-[22px]' />
                     Use Google account
@@ -137,8 +137,8 @@ const Register = () => {
                 </button> */}
             </div>
             <div className='flex items-center justify-center font-bold text-gray-600 my-6'>OR</div>
-            {error && <div className='min-h-[80px] w-full p-5 flexx items-center justify-center bg-red-500 opacity-60 rounded-[3px] text-sm text-white'>{error}</div>}
-            {message && <div className='h-[80px] w-full p-5 flex items-center justify-center bg-prim opacity-70 rounded-[3px] text-sm'>{message}</div>}
+            {error && <div className='min-h-[80px] w-full p-5 flex items-center justify-center bg-red-500 opacity-60 rounded-[3px] text-sm text-white'>{error}</div>}
+            {message && <div className='min-h-[80px] w-full p-5 flex items-center justify-center bg-prim opacity-70 rounded-[3px] text-sm'>{message}</div>}
             <div>
                 {pathname === "/register" && (
                     <label>
@@ -201,11 +201,10 @@ const Register = () => {
                 {pathname === "/register" && !isSubmitting && "Sign Up"}
                 {(pathname === "/login" || pathname === "/") && !isSubmitting && "Log in"}
                 {isSubmitting && <Spinner />}
-
             </button>
             <div className='text-center text-sm mt-1'>
                 <p>Don't have an account yet?</p>
-                <a href={(pathname === "/" || pathname === "/register") ? "/login" : "/register"} className='text-[#759FF2]'>{pathname === "/register" ? "Sign In" : "Sign Up"}</a>
+                <a href={pathname === "/register" ? "/login" : "/register"} className='text-[#759FF2]'>{pathname === "/register" ? "Sign In" : "Sign Up"}</a>
             </div>
 
         </form>

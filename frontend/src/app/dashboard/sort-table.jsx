@@ -18,18 +18,42 @@ import {
 
 import { MdFilterListAlt } from "react-icons/md";
 import { useState } from "react"
+import { formatDate } from "../components/tasks"
 
-export default function SortTable({ searchQuery, router }) {
-  const [starts, setStarts] = useState(undefined)
-  const [openstarts, setOpenstarts] = useState(false)
-  const [createdAtTo, setCreatedAtTo] = useState(undefined)
-  const [openCreatedAtTo, setOpenCreatedAtTo] = useState(false)
+export default function SortTable({ searchQuery, filterStatus, taskStarts, taskEnds, router }) {
   const [search, setSearch] = useState(searchQuery || "")
+  const [status, setStatus] = useState(filterStatus || "")
+  const [starts, setStarts] = useState(taskStarts || undefined)
+  const [ends, seteEnds] = useState(taskEnds || undefined)
+  const [openstarts, setOpenstarts] = useState(false)
+  const [openEnds, setOpenEnds] = useState(false)
 
-  const handleSearchTask = async (e) => {
+  const handleSearchTask = (e) => {
     // e.preventDefault()
     const uuid = window.crypto.randomUUID()
-    router.push(`/dashboard?pageuid=${uuid}&page=${1}&search=${search}`)
+    router.push(`/dashboard?pguuid=${uuid}&page=${1}&search=${search}`)
+  }
+
+  const handleFilterTask = () => {
+    /**
+     * TASK FILTER URL FORMAT
+     * filter-tasks?pageSize=3&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
+     */
+    // If no filter option, decline the request
+    if (!status && !starts && !ends) return
+    const puid = window.crypto.randomUUID()
+    let path = `/dashboard?pguuid=${puid}&page=${1}`
+    if (status) {
+      path += `&status=${status}`
+    }
+    if (starts) {
+      path += `&startDate=${starts}`
+    }
+    if (ends) {
+      path += `&endDate=${ends}`
+    }
+    // force the browser to reload
+    window.location.href = path
   }
   return (
     <div className="font-sans flex flex-col lg:flex-row lg:items-center justify-between w-full p-4 gap-x-10 bg-white border border-gray-100 rounded-lg shadow-sm md:overflow-x-auto">
@@ -49,15 +73,18 @@ export default function SortTable({ searchQuery, router }) {
       </form>
 
       <div className="w-full lg:w-auto flex flex-col lg:flex-row items-center gap-x-2 lg:gap-x-5 gap-y-3 lg:gap-y-0">
-        <Select>
+        <Select
+          defaultValue={status}
+          onValueChange={(value) => setStatus(value)}
+        >
           <SelectTrigger className="w-full lg:w-[150px]">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Completed">Completed</SelectItem>
-            <SelectItem value="Running">Running</SelectItem>
-            <SelectItem value="Canceled">Cancelled</SelectItem>
+            <SelectItem value={"1"}>Pending</SelectItem>
+            <SelectItem value={"2"}>Running</SelectItem>
+            <SelectItem value={"3"}>Completed</SelectItem>
+            <SelectItem value={"4"}>Cancelled</SelectItem>
           </SelectContent>
         </Select>
 
@@ -72,7 +99,7 @@ export default function SortTable({ searchQuery, router }) {
                 id="start"
                 className="font-normal text-gray-700 lg:h-full"
               >
-                {starts ? starts.toLocaleDateString() : "Select date"}
+                {starts ? starts : "Select date"}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
@@ -82,7 +109,7 @@ export default function SortTable({ searchQuery, router }) {
                 selected={starts}
                 captionLayout="dropdown"
                 onSelect={(starts) => {
-                  setStarts(starts)
+                  setStarts(formatDate(starts))
                   setOpenstarts(false)
                 }}
               />
@@ -94,31 +121,34 @@ export default function SortTable({ searchQuery, router }) {
           <Label htmlFor="end" className="px-1">
             Ends:
           </Label>
-          <Popover open={openCreatedAtTo} onOpenChange={setOpenCreatedAtTo}>
+          <Popover open={openEnds} onOpenChange={setOpenEnds}>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 id="end"
                 className="font-normal text-gray-700 lg:h-full"
               >
-                {createdAtTo ? createdAtTo.toLocaleDateString() : "Select date"}
+                {ends ? ends : "Select date"}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto overflow-hidden p-0" align="start">
               <Calendar
                 mode="single"
-                selected={createdAtTo}
+                selected={ends}
                 captionLayout="dropdown"
-                onSelect={(createdAtTo) => {
-                  setCreatedAtTo(createdAtTo)
-                  setOpenCreatedAtTo(false)
+                onSelect={(ends) => {
+                  seteEnds(formatDate(ends))
+                  setOpenEnds(false)
                 }}
               />
             </PopoverContent>
           </Popover>
         </div>
-        <button className="w-full lg:w-auto bg-prim font-bold text-white h-[40px] px-3 rounded cursor-pointer flex items-center justify-center gap-x-1 w-[90px] hover:opacity-70 transition-all duration-300 ease-in-out">
+        <button
+          onClick={handleFilterTask}
+          className="w-full lg:w-auto bg-prim font-bold text-white h-[40px] px-3 rounded cursor-pointer flex items-center justify-center gap-x-1 w-[90px] hover:opacity-70 transition-all duration-300 ease-in-out"
+        >
           <MdFilterListAlt />
           <span className="text-sm">Filter</span>
         </button>

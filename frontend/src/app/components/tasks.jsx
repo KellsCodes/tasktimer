@@ -16,7 +16,7 @@ import { format } from "date-fns"
 import api from "@/lib/axios"
 
 
-const formatDate = (date) => {
+export const formatDate = (date) => {
     return format(date, 'yyyy-MM-dd')
 }
 

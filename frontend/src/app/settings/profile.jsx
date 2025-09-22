@@ -85,15 +85,18 @@ export default function ProfilePage() {
             <div className="flex flex-1 flex-col gap-4">
                 <form onSubmit={handleSubmitData} action="#" className="space-y-5">
                     <div className="h-[80px] w-[80px] rounded-full shadow p-[4px] bg-white relative cursor-pointer">
-                        <img
-                            src={!data?.profileImage ? `/logo.svg` :
-                                data?.profileImage?.type?.startsWith("image/") ?
-                                    URL.createObjectURL(data?.profileImage) :
-                                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/${data?.profileImage}`}
-                            alt="profile-img"
-                            loading="lazy"
-                            className="w-full h-full contain rounded-full"
-                        />
+                        {!data?.profileImage ? <div className="flex items-center justify-center text-md font-bold font-san">{data?.username?.slice(0, 2)?.toUpperCase()}</div> :
+                            <img
+                                src={
+                                    data?.profileImage?.type?.startsWith("image/") ?
+                                        URL.createObjectURL(data?.profileImage) :
+                                        `${process.env.NEXT_PUBLIC_API_BASE_URL}/${data?.profileImage}`
+                                }
+                                alt="profile-img"
+                                loading="lazy"
+                                className="w-full h-full contain rounded-full"
+                            />
+                        }
                         <button
                             type="button"
                             className="cursor-pointer w-[25px] h-[25px] bg-white shadow rounded-full flex items-center justify-center absolute bottom-0 right-0"
@@ -115,7 +118,7 @@ export default function ProfilePage() {
                     </div>
                     {message &&
                         <div
-                            className={`h-12 w-full rounded-md ${error ? "bg-red-400" : "bg-prim"} opacity-80 p-2 flex items-center justify-center text-sm`}
+                            className={`min-h-12 w-full rounded-md ${error ? "bg-red-400" : "bg-prim"} opacity-80 p-5 flex items-center justify-center text-sm`}
                         >
                             {message}
                         </div>
