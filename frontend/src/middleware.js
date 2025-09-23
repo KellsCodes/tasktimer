@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 
-const AUTH_ROUTES = ["/", "/login", "/register", "/verify-email"];
+const AUTH_ROUTES = [
+  "/",
+  "/login",
+  "/register",
+  "/verify-email",
+  "/forgot-password",
+  "/reset-password",
+];
 const PRIVATE_ROUTES = ["/dashboard", "/settings"];
 
 export function middleware(req) {
@@ -41,5 +48,7 @@ export const config = {
     "/verify-email",
     "/dashboard/:path*",
     "/settings/:path*",
+    "/forgot-password",
+    "/reset-password",
   ],
 };
