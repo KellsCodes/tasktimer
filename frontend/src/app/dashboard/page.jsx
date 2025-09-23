@@ -213,7 +213,7 @@ export default function Page() {
             style={bgImagestyle}
             className="w-full h-full flex items-center justify-center" >
 
-            <div className="p-6 m-4 shadow-md bg-white rounded-md w-full md:w-[350px] h-auto flex flex-col items-center justify-center gap-y-4 relative">
+            <div className="p-6 m-4 shadow-md bg-white rounded-md w-full md:w-[450px] h-[250px] lg:h-[300px] flex flex-col items-center justify-center gap-y-4 relative">
               <div className="absolute right-0 top-0">
                 <span class="relative flex size-3">
                   <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-prim opacity-75"></span>
@@ -254,7 +254,7 @@ export default function Page() {
       {
         infoDisplay === 2 ?
           <div style={bgImagestyle} className="w-full h-full flex items-center justify-center">
-            <div className="bg-white relative p-4 m-4 shadow-md rounded-md w-full lg:w-[300px] h-[150px] flex flex-col items-center justify-center gap-y-4">
+            <div className="bg-white relative p-4 m-4 shadow-md rounded-md w-full md:w-[450px] h-[250px] lg:h-[300px] flex flex-col items-center justify-center gap-y-4">
               <div className="absolute right-0 top-0">
                 <span class="relative flex size-3">
                   <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-prim opacity-75"></span>
