@@ -4,6 +4,7 @@ import {
   loginUser,
   registerUser,
   userLogOut,
+  getUserByEmailService
 } from "../services/userService.js";
 
 import { loginSchema, userSchema } from "../validations/userValidations.js";
@@ -56,6 +57,12 @@ export const login = async (req, res) => {
     res.status(500).json({ code: 2, message: error.message });
   }
 };
+
+export const getUserByEmailController = async (req, res) => {
+	const email = req.user.email
+	const {statusCode, result} = await getUserByEmailService(email)
+	return res.status(statusCode).json(result)
+}
 
 export const emailVerification = async (req, res) => {
   const token = req.body;

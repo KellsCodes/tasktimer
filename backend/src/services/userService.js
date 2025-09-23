@@ -87,7 +87,7 @@ export const loginUser = async (email, password) => {
   return {
     accessToken,
     refreshToken,
-    user: { id: user.id, email: user.email, username: user.username, firstname: user.profile.firstname, lastname: user.profile.lastname, profileImage: user.profile.profileImage },
+    user: { id: user.id, email: user.email, username: user.username, firstname: user?.profile?.firstname, lastname: user?.profile?.lastname, profileImage: user?.profile?.profileImage },
   };
 };
 
@@ -154,3 +154,13 @@ export const generateNewRefreshToken = async (token) => {
     };
   }
 };
+
+export const getUserByEmailService = async (email) => {
+	if (!email) return {statusCode: 400, result: {code: 2, message: "no record found"}}
+	try {
+	const user = await getUserByEmail(email)
+	return {statusCode: 200, result: {code: 1, user: {id: user.id, email: user.email, username: user.username, firstname: user?.profile?.firstname || null, lastname: user?.profile?.lastname || null, profileImage: user?.profile?.profileImage || null}, message: "user found"}}
+	} catch(err){
+		return {statusCode: 400, result: {code: 2, message: "no record found"}}
+	}
+}

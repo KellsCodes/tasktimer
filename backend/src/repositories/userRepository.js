@@ -11,19 +11,29 @@ export const getUserByEmail = async (email) => {
   return await prisma.user.findUnique({
     where: { email },
     include: {
-    profile: {
-      select: {
-        firstname: true,
-        lastname: true,
-        profileImage: true,
-      },
-    },}
+	    profile: {
+	      select: {
+	        firstname: true,
+	        lastname: true,
+	        profileImage: true,
+	      },
+    	},
+    }
   });
 };
 
 export const getUserById = async (id) => {
   return await prisma.user.findUnique({
     where: { id },
+    include: {
+    	profile: {
+    		select: {
+    			firstname: true,
+    			lastname: true,
+    			profileImage: true,
+    		}
+    	}
+    }
   });
 };
 
