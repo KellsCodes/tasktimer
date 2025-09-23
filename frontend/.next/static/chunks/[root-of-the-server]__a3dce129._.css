@@ -273,6 +273,7 @@
     --radius-xs: .125rem;
     --ease-in-out: cubic-bezier(.4, 0, .2, 1);
     --animate-spin: spin 1s linear infinite;
+    --animate-ping: ping 1s cubic-bezier(0, 0, .2, 1) infinite;
     --animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;
     --default-transition-duration: .15s;
     --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
@@ -783,6 +784,10 @@
     left: calc(var(--spacing) * 2);
   }
 
+  .left-4 {
+    left: calc(var(--spacing) * 4);
+  }
+
   .left-\[50\%\] {
     left: 50%;
   }
@@ -805,6 +810,10 @@
 
   .m-4 {
     margin: calc(var(--spacing) * 4);
+  }
+
+  .m-5 {
+    margin: calc(var(--spacing) * 5);
   }
 
   .-mx-1 {
@@ -919,6 +928,11 @@
     height: calc(var(--spacing) * 2.5);
   }
 
+  .size-3 {
+    width: calc(var(--spacing) * 3);
+    height: calc(var(--spacing) * 3);
+  }
+
   .size-3\.5 {
     width: calc(var(--spacing) * 3.5);
     height: calc(var(--spacing) * 3.5);
@@ -1030,12 +1044,28 @@
     height: 80px;
   }
 
+  .h-\[100vh\] {
+    height: 100vh;
+  }
+
   .h-\[150px\] {
     height: 150px;
   }
 
   .h-\[200px\] {
     height: 200px;
+  }
+
+  .h-\[250px\] {
+    height: 250px;
+  }
+
+  .h-\[400px\] {
+    height: 400px;
+  }
+
+  .h-\[450px\] {
+    height: 450px;
   }
 
   .h-\[500px\] {
@@ -1088,6 +1118,10 @@
 
   .min-h-13 {
     min-height: calc(var(--spacing) * 13);
+  }
+
+  .min-h-\[70px\] {
+    min-height: 70px;
   }
 
   .min-h-\[80px\] {
@@ -1300,6 +1334,10 @@
 
   .animate-in {
     animation: enter var(--tw-animation-duration, var(--tw-duration, .15s)) var(--tw-ease, ease) var(--tw-animation-delay, 0s) var(--tw-animation-iteration-count, 1) var(--tw-animation-direction, normal) var(--tw-animation-fill-mode, none);
+  }
+
+  .animate-ping {
+    animation: var(--animate-ping);
   }
 
   .animate-pulse {
@@ -2103,6 +2141,10 @@
     opacity: .7;
   }
 
+  .opacity-75 {
+    opacity: .75;
+  }
+
   .opacity-80 {
     opacity: .8;
   }
@@ -2738,6 +2780,10 @@
     border-left-width: 1px;
   }
 
+  .focus\:border-prim:focus {
+    border-color: #22d172;
+  }
+
   .focus\:bg-accent:focus {
     background-color: var(--accent);
   }
@@ -3304,6 +3350,18 @@
   }
 
   @media (min-width: 48rem) {
+    .md\:w-\[450px\] {
+      width: 450px;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .md\:w-\[500px\] {
+      width: 500px;
+    }
+  }
+
+  @media (min-width: 48rem) {
     .md\:flex-row {
       flex-direction: row;
     }
@@ -3387,6 +3445,12 @@
   @media (min-width: 64rem) {
     .lg\:h-\[40px\] {
       height: 40px;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .lg\:h-\[300px\] {
+      height: 300px;
     }
   }
 
@@ -4380,6 +4444,13 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    opacity: 0;
+    transform: scale(2);
   }
 }
 
