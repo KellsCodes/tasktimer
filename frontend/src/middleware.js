@@ -17,19 +17,19 @@ export function middleware(req) {
   const isAuthRoute = AUTH_ROUTES.includes(pathname);
   const isPrivateRoute = PRIVATE_ROUTES.some((r) => pathname.startsWith(r));
 
-  // Case 1: logged in, trying to access login/register/verify-email/home → redirect to dashboard
+  // logged in, trying to access login/register/verify-email/home → redirect to dashboard
   if (token && isAuthRoute) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
-  // Case 2: not logged in, trying to access private routes → redirect to login
+  // not logged in, trying to access private routes → redirect to login
   if (!token && isPrivateRoute) {
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Case 3: all good → continue
+  //  all good → continue
   return NextResponse.next();
 }
 

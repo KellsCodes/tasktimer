@@ -15,28 +15,14 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Modal } from "./Modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Tasks from "./tasks";
-import Cookies from "js-cookie";
 
 export default function AuthLayout({ children, setData }) {
     const pathname = usePathname()
-    const router = useRouter()
     const [open, setOpenChange] = useState(false);
-    const [authorized, setAuthorized] = useState(false)
-
-    useEffect(() => {
-        const privateRoutes = ["/dashboard", "/settings"]
-        const token = Cookies.get("accessToken")
-        if (privateRoutes.some((route) => pathname.startsWith(route)) && token) {
-            Cookies.remove("refreshToken");
-            router.replace("/login");
-        } else {
-            setAuthorized(true);
-        }
-    }, [pathname, router])
 
 
     return (
