@@ -201,7 +201,14 @@ export default function Page() {
       {
         infoDisplay === 1 || infoDisplay === 3 ?
           <div className="w-full h-full flex items-center justify-center">
-            <div className="p-6 m-4 shadow-md rounded-md w-full md:w-[350px] h-auto flex flex-col items-center justify-center gap-y-4">
+
+            <div className="p-6 m-4 shadow-md rounded-md w-full md:w-[350px] h-auto flex flex-col items-center justify-center gap-y-4 relative">
+              <div className="absolute right-0 top-0">
+                <span class="relative flex size-3">
+                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-prim opacity-75"></span>
+                  <span class="relative inline-flex size-3 rounded-full bg-prim"></span>
+                </span>
+              </div>
               <p className="font-sans text-sm font-bold text-center">
                 {currentTime.toLocaleString("en-US", {
                   month: "short",
