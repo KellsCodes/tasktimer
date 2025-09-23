@@ -26,6 +26,11 @@ export default function ProfilePage() {
             }
         } catch (error) {
             console.error(error)
+            // If no profile data found, call up user data from localstorage
+            if (error?.response?.data?.code === 2) {
+                const userData = localStorage.getItem("user")
+                setData(userData ? JSON.parse(userData) : {})
+            }
         }
         setIsLoading(false)
     }
@@ -85,7 +90,7 @@ export default function ProfilePage() {
             <div className="flex flex-1 flex-col gap-4">
                 <form onSubmit={handleSubmitData} action="#" className="space-y-5">
                     <div className="h-[80px] w-[80px] rounded-full shadow p-[4px] bg-white relative cursor-pointer">
-                        {!data?.profileImage ? <div className="flex items-center justify-center text-md font-bold font-san">{data?.username?.slice(0, 2)?.toUpperCase()}</div> :
+                        {!data?.profileImage ? <div className="w-full h-full rounded-full flex items-center justify-center text-md font-bold font-san">{data?.username?.slice(0, 2)?.toUpperCase()}</div> :
                             <img
                                 src={
                                     data?.profileImage?.type?.startsWith("image/") ?

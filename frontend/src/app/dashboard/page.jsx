@@ -22,6 +22,7 @@ export default function Page() {
   const status = useSearchParams().get("status")
   const startDate = useSearchParams().get("startDate")
   const endDate = useSearchParams().get("endDate")
+  const [infoDisplay, setInfoDisplay] = useState(null) // Default=null, new users with no tasks on dashboard=1, search or filter with no record=2, error=3
 
   const handleOpenModal = (rowData) => {
     if (openModal) setSelectedRow(null)
@@ -35,16 +36,28 @@ export default function Page() {
       const res = await api.get(path)
       if (res?.data?.code === 1 || res?.status === 200) {
         setData(res.data?.data?.data || [])
-        delete res.data?.data?.data
+        // delete res.data?.data?.data
         setPageParams({
           currentPage: res.data?.data?.currentPage,
           totalPages: res.data?.data?.totalPages
         })
+        // console.log(res.data?.data)
+        if (parseInt(pageParams.currentPage) === 1 && res.data?.data?.data?.length < 1) {
+          setInfoDisplay(1)
+        } else if (
+          (parseInt(pageParams.currentPage) > 1 ||
+            isNaN(parseInt(pageParams.currentPage))
+            || typeof parseInt(pageParams.currentPage) === "undefined")
+          && (!res.data?.data?.data || res.data?.data?.data?.length < 1)) {
+          setInfoDisplay(2)
+        }
       } else {
         setData([])
+        setInfoDisplay(2)
       }
     } catch (error) {
       console.error(error)
+      setInfoDisplay(3)
     }
     setIsLoading(false)
   }
@@ -59,11 +72,16 @@ export default function Page() {
           currentPage: res.data?.data?.currentPage,
           totalPages: res.data?.data?.totalPages
         })
+        if (!res.data?.data?.data || res.data?.data?.data?.length < 1) {
+          setInfoDisplay(2)
+        }
       } else {
         setData([])
+        setInfoDisplay(2)
       }
     } catch (error) {
       console.error(error)
+      setInfoDisplay(3)
     }
     setIsLoading(false)
   }
@@ -89,12 +107,17 @@ export default function Page() {
           currentPage: res.data?.data?.currentPage,
           totalPages: res.data?.data?.totalPages
         })
+        if (!res.data?.data?.data || res.data?.data?.data?.length < 1) {
+          setInfoDisplay(2)
+        }
       } else {
         setData([])
+        setInfoDisplay(2)
       }
 
     } catch (error) {
       console.error(error)
+      setInfoDisplay(3)
     }
     setIsLoading(false)
   }
@@ -145,12 +168,60 @@ export default function Page() {
     }
   }, [])
 
+  useEffect(() => {
+    if (data.length >= 1) {
+      setInfoDisplay(null)
+    }
+  }, [data])
+
+
   return (
     <AuthLayout setData={setData}>
       {isLoading ?
         <div className="w-full h-full flex items-center justify-center">
           <Spinner spinnerColor={"border-prim"} />
         </div> : null
+      }
+      {/* For new accounds with no added task yet */}
+      {
+        infoDisplay === 1 || infoDisplay === 3 ?
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="p-6 m-4 shadow-md rounded-md w-full md:w-[350px] h-auto flex flex-col items-center justify-center gap-y-4">
+              <p className="font-sans text-sm font-bold text-center">Sept 23 2025, 10:12:45 AM</p>
+              <p className="font-sans text-md font-medium text-center opacity-60">
+                {infoDisplay === 1 ? "Start by adding a task — we’ll handle the reminders for you." : "The system encountered an error."}
+              </p>
+              <button
+                onClick={() => {
+                  if (infoDisplay === 3) {
+                    window.location.href = "/dashboard"
+                  } else {
+                    setOpenModal(true)
+                  }
+                }}
+                className={`p-2 rounded-md h-10 font-bold font-sans ${infoDisplay === 1 ? "bg-prim text-white w-[130px]" : "bg-gray-100 w-[150px]"} cursor-pointer text-sm`}
+              >
+                {infoDisplay === 1 ? "Add task" : "Get all tasks"}
+              </button>
+            </div>
+          </div>
+          : null
+      }
+      {/* For users with task but no search or filtered task returned */}
+      {
+        infoDisplay === 2 ?
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="p-4 m-4 shadow-md rounded-md w-full lg:w-[300px] h-[150px] flex flex-col items-center justify-center gap-y-4">
+              <p className="font-sans text-md font-bold">No record found.</p>
+              <button
+                onClick={() => window.location.href = "/dashboard"}
+                className="p-2 rounded-md h-12 w-[150px] bg-gray-100 cursor-pointer text-sm"
+              >
+                Get all tasks
+              </button>
+            </div>
+          </div>
+          : null
       }
       {data.length >= 1 ? (
         <div className="flex flex-1 flex-col gap-4 p-4">
@@ -165,17 +236,6 @@ export default function Page() {
             />
           </div>
           <DataTable columns={getColumns(handleOpenModal, handleUpdateTaskStatus, handleDeleteTask)} data={data} />
-          {openModal &&
-            <Modal props={{
-              open: openModal, onOpenChange: () => {
-                setOpenModal(prev => !prev)
-                setSelectedRow(null)
-              }
-            }}
-            >
-              <Tasks type="edit" data={selectedRow} setData={setData} />
-            </Modal>
-          }
 
           {pageParams?.totalPages && pageParams?.totalPages > 1 ?
             <AppPagination
@@ -185,6 +245,19 @@ export default function Page() {
           }
         </div>
       ) : null}
+
+      {/* Modal toggle */}
+      {openModal &&
+        <Modal props={{
+          open: openModal, onOpenChange: () => {
+            setOpenModal(prev => !prev)
+            setSelectedRow(null)
+          }
+        }}
+        >
+          <Tasks type="edit" data={selectedRow} setData={setData} />
+        </Modal>
+      }
 
     </AuthLayout>
   );
