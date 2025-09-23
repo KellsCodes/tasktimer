@@ -167,12 +167,21 @@ export default function Page() {
     } else {
       handleFetchTasks()
     }
-
-    const interval = setInterval(() => {
-      setCurrentTime(new Date())
-    }, 1000)
-    return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    let interval;
+
+    if (infoDisplay === 1 || infoDisplay === 3) {
+      interval = setInterval(() => {
+        setCurrentTime(new Date());
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [infoDisplay]);
 
   useEffect(() => {
     if (data.length >= 1) {
