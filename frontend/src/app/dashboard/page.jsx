@@ -9,6 +9,7 @@ import Tasks from "../components/tasks";
 import api from "@/lib/axios";
 import { Spinner } from "../components/spinner";
 import { useRouter, useSearchParams } from "next/navigation"
+import AppPagination from "../components/AppPagination";
 
 export default function Page() {
   const [data, setData] = useState([]);
@@ -29,13 +30,16 @@ export default function Page() {
   }
 
   const handleFetchTasks = async () => {
-
     try {
-      const res = await api.get(`/get-tasks?page=${pageParams.currentPage}&pageSize=15`)
+      const path = `/get-tasks?page=${pageParams.currentPage}&pageSize=3`
+      const res = await api.get(path)
       if (res?.data?.code === 1 || res?.status === 200) {
         setData(res.data?.data?.data || [])
         delete res.data?.data?.data
-        setPageParams({ ...res.data?.data })
+        setPageParams({
+          currentPage: res.data?.data?.currentPage,
+          totalPages: res.data?.data?.totalPages
+        })
       } else {
         setData([])
       }
@@ -47,14 +51,19 @@ export default function Page() {
 
   const handleSearchTask = async () => {
     try {
-      const res = await api.get(`get-tasks?page=${pageParams.currentPage}&pageSize=15&search=${search}`)
+      const path = `get-tasks?page=${pageParams.currentPage}&pageSize=3&search=${search}`
+      const res = await api.get(path)
       if (res.status === 200) {
         setData(res.data?.data?.data)
+        setPageParams({
+          currentPage: res.data?.data?.currentPage,
+          totalPages: res.data?.data?.totalPages
+        })
       } else {
         setData([])
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
     setIsLoading(false)
   }
@@ -62,7 +71,7 @@ export default function Page() {
   const handleTaskFilter = async () => {
     // filter-tasks?pageSize=3&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
     if (!status && !startDate && !endDate) return
-    let apiURL = `/filter-tasks?pageSize=15&page=${pageParams.currentPage}`
+    let apiURL = `/filter-tasks?pageSize=3&page=${pageParams.currentPage}`
     if (status) {
       apiURL += `&status=${status}`
     }
@@ -74,15 +83,18 @@ export default function Page() {
     }
     try {
       const res = await api.get(apiURL)
-      console.log(res)
       if (res.status === 200) {
         setData(res.data?.data?.data)
+        setPageParams({
+          currentPage: res.data?.data?.currentPage,
+          totalPages: res.data?.data?.totalPages
+        })
       } else {
         setData([])
       }
 
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
     setIsLoading(false)
   }
@@ -164,8 +176,16 @@ export default function Page() {
               <Tasks type="edit" data={selectedRow} setData={setData} />
             </Modal>
           }
+
+          {pageParams?.totalPages ?
+            <AppPagination
+              currentPage={parseInt(pageParams.currentPage) || 1}
+              totalPages={parseInt(pageParams?.totalPages) || 1}
+            /> : null
+          }
         </div>
       ) : null}
+
     </AuthLayout>
   );
 }
