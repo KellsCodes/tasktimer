@@ -31,7 +31,7 @@ export default function Page() {
 
   const handleFetchTasks = async () => {
     try {
-      const path = `/get-tasks?page=${pageParams.currentPage}&pageSize=3`
+      const path = `/get-tasks?page=${pageParams.currentPage}&pageSize=15`
       const res = await api.get(path)
       if (res?.data?.code === 1 || res?.status === 200) {
         setData(res.data?.data?.data || [])
@@ -51,7 +51,7 @@ export default function Page() {
 
   const handleSearchTask = async () => {
     try {
-      const path = `get-tasks?page=${pageParams.currentPage}&pageSize=3&search=${search}`
+      const path = `get-tasks?page=${pageParams.currentPage}&pageSize=15&search=${search}`
       const res = await api.get(path)
       if (res.status === 200) {
         setData(res.data?.data?.data)
@@ -69,9 +69,9 @@ export default function Page() {
   }
 
   const handleTaskFilter = async () => {
-    // filter-tasks?pageSize=3&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
+    // filter-tasks?pageSize=15&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
     if (!status && !startDate && !endDate) return
-    let apiURL = `/filter-tasks?pageSize=3&page=${pageParams.currentPage}`
+    let apiURL = `/filter-tasks?pageSize=15&page=${pageParams.currentPage}`
     if (status) {
       apiURL += `&status=${status}`
     }
@@ -131,9 +131,9 @@ export default function Page() {
     }
   }
 
-  // get task localhost:5001/api/v1/get-tasks?page=1&pageSize=3
-  // search for task localhost:5001/api/v1/get-tasks?page=1&pageSize=3&search=xender
-  // filter task localhost:5001/api/v1/filter-tasks?pageSize=3&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
+  // get task localhost:5001/api/v1/get-tasks?page=1&pageSize=15
+  // search for task localhost:5001/api/v1/get-tasks?page=1&pageSize=15&search=xender
+  // filter task localhost:5001/api/v1/filter-tasks?pageSize=15&status=1&startDate=2025-10-12&endDate=2025-10-13&page=1
 
   useEffect(() => {
     if (search) {
@@ -177,7 +177,7 @@ export default function Page() {
             </Modal>
           }
 
-          {pageParams?.totalPages ?
+          {pageParams?.totalPages && pageParams?.totalPages > 1 ?
             <AppPagination
               currentPage={parseInt(pageParams.currentPage) || 1}
               totalPages={parseInt(pageParams?.totalPages) || 1}

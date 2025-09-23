@@ -3,7 +3,6 @@
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -14,16 +13,21 @@ export default function AppPagination({ currentPage, totalPages }) {
 
     const handleGoToPage = (page) => {
         if (page < 1 || page > totalPages) return
+        let newPath = ""
         const pathName = window.location.href
-        // check if there is no pagination yet
-        // if (pathName.split(""))
-        const path = pathName.split("&").map(value => {
-            if (!(/page=/.test(value))) return value
-            const pageNumber = `page=${page}`
-            return pageNumber
-        }).join("&")
+        // check if there is no pagination yet, add page number to link
+        if (!(/page=/.test(pathName))) {
+            const puid = window.crypto.randomUUID()
+            newPath = `${pathName}?pguuid=${puid}&page=${page}`
+        } else {
+            newPath = pathName.split("&").map(value => {
+                if (!(/page=/.test(value))) return value
+                const pageNumber = `page=${page}`
+                return pageNumber
+            }).join("&")
 
-        window.location.href = path
+        }
+        window.location.href = newPath
     }
     return (
         <Pagination>
