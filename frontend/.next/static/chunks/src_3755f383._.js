@@ -104,6 +104,23 @@ function UserProvider(param) {
             if (storedUser) {
                 setUser(JSON.parse(storedUser));
             }
+            // incase user deletes user object from localstorage but the access token is still available, get user data
+            if (!localStorage.getItem("user") && __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get("accessToken")) {
+                ({
+                    "UserProvider.useEffect": async ()=>{
+                        try {
+                            var _res_data;
+                            const res = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get("/get-user");
+                            if ((res === null || res === void 0 ? void 0 : (_res_data = res.data) === null || _res_data === void 0 ? void 0 : _res_data.code) === 1) {
+                                var _res_data1;
+                                setUser(res === null || res === void 0 ? void 0 : (_res_data1 = res.data) === null || _res_data1 === void 0 ? void 0 : _res_data1.user);
+                            }
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    }
+                })["UserProvider.useEffect"]();
+            }
         }
     }["UserProvider.useEffect"], []);
     // keep localStorage in sync whenever user changes
@@ -121,18 +138,25 @@ function UserProvider(param) {
     // Logout user function
     const logout = async ()=>{
         const refreshToken = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get("refreshToken");
-        try {
-            const { data } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].put("/logout", {
-                refreshToken
-            });
-            if (data.code === 1) {
-                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].remove("refreshToken");
-                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].remove("accessToken");
-                localStorage.removeItem("user");
-                window.location.href = "/";
+        if (!refreshToken) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].remove("refreshToken");
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].remove("accessToken");
+            localStorage.removeItem("user");
+            window.location.href = "/";
+        } else {
+            try {
+                const { data } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].put("/logout", {
+                    refreshToken
+                });
+                if (data.code === 1) {
+                    __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].remove("refreshToken");
+                    __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].remove("accessToken");
+                    localStorage.removeItem("user");
+                    window.location.href = "/";
+                }
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
         }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(UserContext.Provider, {
@@ -144,7 +168,7 @@ function UserProvider(param) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/app/authProvider.jsx",
-        lineNumber: 46,
+        lineNumber: 69,
         columnNumber: 9
     }, this);
 }
