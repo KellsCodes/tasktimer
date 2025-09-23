@@ -8,6 +8,7 @@ const UserContext = createContext()
 
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null)
+    
 
     // Load user from local storage
     useEffect(() => {
@@ -15,6 +16,7 @@ export function UserProvider({ children }) {
         if (storedUser) {
             setUser(JSON.parse(storedUser))
         }
+        if (!localStorage.getItem("user")) { }
     }, [])
 
     // keep localStorage in sync whenever user changes
