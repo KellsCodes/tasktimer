@@ -23,6 +23,7 @@ export default function Page() {
   const startDate = useSearchParams().get("startDate")
   const endDate = useSearchParams().get("endDate")
   const [infoDisplay, setInfoDisplay] = useState(null) // Default=null, new users with no tasks on dashboard=1, search or filter with no record=2, error=3
+  const [currentTime, setCurrentTime] = useState(new Date())
 
   const handleOpenModal = (rowData) => {
     if (openModal) setSelectedRow(null)
@@ -166,6 +167,11 @@ export default function Page() {
     } else {
       handleFetchTasks()
     }
+
+    const interval = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 1000)
+    return () => clearInterval(interval)
   }, [])
 
   useEffect(() => {
@@ -187,7 +193,17 @@ export default function Page() {
         infoDisplay === 1 || infoDisplay === 3 ?
           <div className="w-full h-full flex items-center justify-center">
             <div className="p-6 m-4 shadow-md rounded-md w-full md:w-[350px] h-auto flex flex-col items-center justify-center gap-y-4">
-              <p className="font-sans text-sm font-bold text-center">Sept 23 2025, 10:12:45 AM</p>
+              <p className="font-sans text-sm font-bold text-center">
+                {currentTime.toLocaleString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: true      // AM/PM
+                })}
+              </p>
               <p className="font-sans text-md font-medium text-center opacity-60">
                 {infoDisplay === 1 ? "Start by adding a task — we’ll handle the reminders for you." : "The system encountered an error."}
               </p>
