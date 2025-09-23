@@ -9,11 +9,27 @@ const UserContext = createContext()
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null)
 
+
     // Load user from local storage
     useEffect(() => {
         const storedUser = localStorage.getItem("user")
         if (storedUser) {
             setUser(JSON.parse(storedUser))
+        }
+
+        // incase user deletes user object from localstorage but the access token is still available, get user data
+        if (!localStorage.getItem("user") && Cookies.get("accessToken")) {
+            (async () => {
+                try {
+                    const res = await api.get("/get-user")
+                    if (res?.data?.code === 1) {
+                        setUser(res?.data?.user)
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+
+            })()
         }
     }, [])
 
@@ -29,16 +45,23 @@ export function UserProvider({ children }) {
     // Logout user function
     const logout = async () => {
         const refreshToken = Cookies.get("refreshToken")
-        try {
-            const { data } = await api.put("/logout", { refreshToken })
-            if (data.code === 1) {
-                Cookies.remove("refreshToken")
-                Cookies.remove("accessToken")
-                localStorage.removeItem("user")
-                window.location.href = "/"
+        if (!refreshToken) {
+            Cookies.remove("refreshToken")
+            Cookies.remove("accessToken")
+            localStorage.removeItem("user")
+            window.location.href = "/"
+        } else {
+            try {
+                const { data } = await api.put("/logout", { refreshToken })
+                if (data.code === 1) {
+                    Cookies.remove("refreshToken")
+                    Cookies.remove("accessToken")
+                    localStorage.removeItem("user")
+                    window.location.href = "/"
+                }
+            } catch (error) {
+                console.error(error)
             }
-        } catch (error) {
-            console.error(error)
         }
     }
 

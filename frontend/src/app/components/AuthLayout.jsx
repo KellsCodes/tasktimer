@@ -23,6 +23,8 @@ import Tasks from "./tasks";
 export default function AuthLayout({ children, setData }) {
     const pathname = usePathname()
     const [open, setOpenChange] = useState(false);
+
+
     return (
         <SidebarProvider>
             <AppSidebar />
