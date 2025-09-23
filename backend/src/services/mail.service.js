@@ -18,7 +18,7 @@ export const sendVerificationEmail = async (user, token) => {
   });
 };
 export const sendResetPasswordEmail = async (user, token) => {
-  const resetUrl = `${process.env.FRONTEND_URL}/reset-email?token=${token}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
   await transporter.sendMail({
     from: `time.it@mail.com`,
     to: user.email,

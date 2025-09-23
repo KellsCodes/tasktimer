@@ -12,12 +12,11 @@ import { sendResetPasswordEmail } from "./mail.service.js";
 
 export const updatePasswordService = async (userId, passwordData) => {
   const validData = updatePasswordSchema.validate(passwordData);
-  if (validData?.error){
+  if (validData?.error) {
     return {
       statusCode: 400,
       result: { code: 2, message: validData.error.details[0]["message"] },
     };
-  
   }
   if (validData.password !== validData.confirmPassword) {
     return {
@@ -62,7 +61,7 @@ export const updatePasswordService = async (userId, passwordData) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(passwordData.password, salt);
   try {
-    const data = await updateUserPassword(userId, hashedPassword);
+    await updateUserPassword(userId, hashedPassword);
     return {
       statusCode: 200,
       result: { code: 1, message: "Password changed successfully." },
@@ -130,17 +129,20 @@ export const verifyResetPasswordToken = async (passwordData) => {
         statusCode: 400,
         result: { code: 2, message: "Token is invalid." },
       };
-    const updatedPassword = await updatePasswordService(data.userId, {
-      oldPassword: passwordData.oldPassword,
-      password: passwordData.password,
-      confirmPassword: passwordData.confirmPassword,
-    });
-    return updatedPassword;
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(passwordData.password, salt);
+    await updateUserPassword(data.userId, hashedPassword);
+    return {
+      statusCode: 200,
+      result: { code: 1, message: "Password changed successfully." },
+    };
   } catch (error) {
     return {
       statusCode: 500,
       result: {
-        code: 1,
+        code: 2,
         message: error.message || "Internal server error.",
       },
     };

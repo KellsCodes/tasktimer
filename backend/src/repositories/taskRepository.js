@@ -58,7 +58,7 @@ export const getTasks = async (
           },
         }
       : {}),
-    ...(!isNaN(status) && status >= 1 && status <= 3 ? { status } : {}),
+    ...(!isNaN(status) && status >= 1 && status <= 4 ? { status } : {}),
     ...(start || end
       ? {
           AND: [
