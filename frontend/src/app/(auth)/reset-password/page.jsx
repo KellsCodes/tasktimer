@@ -5,6 +5,7 @@ import api from "@/lib/axios"
 import { passwordRegEx } from "@/lib/regEx"
 import React, { useEffect, useState } from "react"
 import { useSearchParams } from 'next/navigation';
+import AppLogo from "@/app/components/AppLogo"
 
 const bgImagestyle = {
     backgroundImage: 'url(/logo.svg)',
@@ -79,13 +80,21 @@ export default function ResetPassword() {
     }, [messageType])
     return (
         <div style={bgImagestyle} className="font-sans bg-white w-full h-[100vh] flex items-center justify-center">
-            <div className="relative bg-white shadow-lg w-full md:w-[500px] h-[450px] rounded-lg p-4 m-5">
+            <div className="relative bg-white shadow-lg w-full md:w-[500px] h-[370px] rounded-lg p-4 m-5">
+                <div className="w-full flex items-center justify-center">
+                    <div className="w-22">
+                        <AppLogo />
+                    </div>
+                </div>
+
                 {
                     message ?
-                        <div
-                            className={`text-center absolute top-4 right-4 left-4 p-4 min-h-[70px] ${messageType === 1 ? "bg-prim" : "bg-red-500"} rounded-sm opacity-70 text-xs flex items-center justify-center`}
-                        >
-                            {message}
+                        <div className="bg-white absolute top-4 right-4 left-4 rounded-sm">
+                            <div
+                                className={`text-center p-4 min-h-[50px] ${messageType === 1 ? "bg-prim" : "bg-red-500"} rounded-sm opacity-70 text-xs flex items-center justify-center`}
+                            >
+                                {message}
+                            </div>
                         </div>
                         : null
                 }
