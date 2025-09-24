@@ -1,5 +1,6 @@
 "use client"
 
+import AppLogo from "@/app/components/AppLogo"
 import { Spinner } from "@/app/components/spinner"
 import api from "@/lib/axios"
 import React, { useState } from "react"
@@ -45,18 +46,25 @@ export default function ForgotPassword() {
         }
     }
     return (
-        <div style={bgImagestyle} className="font-sans bg-white w-full h-[100vh] flex items-center justify-center">
-            <div className="relative bg-white shadow-lg w-full md:w-[500px] h-[400px] rounded-lg p-4 m-5">
+        <div style={bgImagestyle} className="font-sans bg-white w-full h-[100vh] flex flex-col items-center justify-center">
+            <div className="relative bg-white shadow-lg w-full md:w-[500px] h-[300px] rounded-lg p-4 m-5 space-y-8">
+                <div className="w-full flex items-center justify-center">
+                    <div className="w-22">
+                        <AppLogo />
+                    </div>
+                </div>
                 {
                     message ?
-                        <div
-                            className={`absolute top-4 right-4 left-4 p-4 min-h-[70px] ${messageType === 1 ? "bg-prim" : "bg-red-500"} rounded-sm opacity-70 text-xs flex items-center justify-center`}
-                        >
-                            {message}
+                        <div className="bg-white absolute top-4 right-4 left-4 rounded-sm">
+                            <div
+                                className={` w-full p-4 min-h-[50px] ${messageType === 1 ? "bg-prim" : "bg-red-500"} rounded-sm opacity-70 text-xs flex items-center justify-center`}
+                            >
+                                {message}
+                            </div>
                         </div>
                         : null
                 }
-                <form onSubmit={handleRequestToken} action="#" className="w-full h-full flex flex-col items-center justify-center">
+                <form onSubmit={handleRequestToken} action="#" className="w-full h-auto flex flex-col items-center justify-center">
                     <div className="w-full text-sm">
                         <label htmlFor="email" className="font-bold">Email</label>
                         <input

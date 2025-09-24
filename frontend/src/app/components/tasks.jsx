@@ -63,8 +63,8 @@ const Tasks = forwardRef(({ type, data, setData, setIsSubmitting, isSubmitting }
                     const res = (type && type === "edit") ? await api.put("/update-task", userTask) : await api.post("/add-task", userTask)
                     if (res?.data?.code === 1 || res.status === 200) {
                         // set the task to task array
-                        if (type === "edit" && data.id) {
-                            setData(prev => prev.map(task => data.id === task.id ? res.data.data : task).sort((a, b) => new Date(a.startAtUTC).getTime() - new Date(b.startAtUTC).getTime()))
+                        if (type === "edit" && formData.id) {
+                            setData(prev => prev.map(task => formData.id === task.id ? res.data.data : task).sort((a, b) => new Date(a.startAtUTC).getTime() - new Date(b.startAtUTC).getTime()))
                         } else {
                             setData(prev => [res.data.data, ...prev].sort((a, b) => new Date(a.startAtUTC).getTime() - new Date(b.startAtUTC).getTime()))
                         }
@@ -97,9 +97,11 @@ const Tasks = forwardRef(({ type, data, setData, setIsSubmitting, isSubmitting }
     }, [])
     return (
         <div className="grid gap-y-7">
-            <div className="grid gap-2">
+            <div className="grid gap-2 relative">
                 {message &&
-                    <div className={`min-h-13 w-full p-3 bg-${error ? "red-500" : "prim"} opacity-70 text-sm flex items-center justify-center rounded-lg`}>{message}</div>
+                    <div className="absolute -top-13 left-0 right-0 shadow-lg min-h-13 w-full bg-white p-0 rounded-lg">
+                        <div className={`min-h-13 w-full p-3 bg-${error ? "red-500" : "prim"} opacity-70 text-sm text-center flex items-center justify-center rounded-lg`}>{message}</div>
+                    </div>
                 }
                 <label htmlFor="title">Title</label>
                 <Input

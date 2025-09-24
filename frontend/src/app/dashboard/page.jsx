@@ -157,6 +157,9 @@ export default function Page() {
     try {
       const res = await api.delete("/delete-task", { data: { id: taskId } })
       if (res.status === 200 || res.data?.code === 1) {
+        if (data.length === 1) {
+          setInfoDisplay(1)
+        }
         setData(prev => prev.filter(task => task.id !== taskId))
       }
     } catch (error) {
@@ -215,9 +218,9 @@ export default function Page() {
 
             <div className="p-6 m-4 shadow-md bg-white rounded-md w-full md:w-[450px] h-[250px] lg:h-[300px] flex flex-col items-center justify-center gap-y-4 relative">
               <div className="absolute right-0 top-0">
-                <span class="relative flex size-3">
-                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-prim opacity-75"></span>
-                  <span class="relative inline-flex size-3 rounded-full bg-prim"></span>
+                <span className="relative flex size-3">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-prim opacity-75"></span>
+                  <span className="relative inline-flex size-3 rounded-full bg-prim"></span>
                 </span>
               </div>
               <p className="font-sans text-sm font-bold text-center">
@@ -256,9 +259,9 @@ export default function Page() {
           <div style={bgImagestyle} className="w-full h-full flex items-center justify-center">
             <div className="bg-white relative p-4 m-4 shadow-md rounded-md w-full md:w-[450px] h-[250px] lg:h-[300px] flex flex-col items-center justify-center gap-y-4">
               <div className="absolute right-0 top-0">
-                <span class="relative flex size-3">
-                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-prim opacity-75"></span>
-                  <span class="relative inline-flex size-3 rounded-full bg-prim"></span>
+                <span className="relative flex size-3">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-prim opacity-75"></span>
+                  <span className="relative inline-flex size-3 rounded-full bg-prim"></span>
                 </span>
               </div>
               <p className="font-sans text-md font-bold">No record found.</p>

@@ -136,9 +136,20 @@ const Register = () => {
                     Use LinkedIn account
                 </button> */}
             </div>
-            <div className='flex items-center justify-center font-bold text-gray-600 my-6'>OR</div>
-            {error && <div className='min-h-[80px] w-full p-5 flex items-center justify-center bg-red-500 opacity-60 rounded-[3px] text-sm text-white'>{error}</div>}
-            {message && <div className='min-h-[80px] w-full p-5 flex items-center justify-center bg-prim opacity-70 rounded-[3px] text-sm'>{message}</div>}
+            <div className='relative'>
+                <div className='flex items-center justify-center font-bold text-gray-600 my-6'>OR</div>
+
+                {error &&
+                    <div className='absolute -top-5 left-0 right-0 bg-white rounded-[3px]'>
+                        <div className='min-h-[50px] w-full p-5 flex items-center justify-center bg-red-500 opacity-60 rounded-[3px] text-sm text-white text-center'>{error}</div>
+                    </div>
+                }
+                {message &&
+                    <div className='absolute -top-6 left-0 right-0 bg-white rounded-[3px]'>
+                        <div className='min-h-[50px] w-full p-5 flex items-center justify-center bg-prim opacity-60 rounded-[3px] text-sm text-center'>{message}</div>
+                    </div>
+                }
+            </div>
             <div>
                 {pathname === "/register" && (
                     <label>
@@ -202,10 +213,15 @@ const Register = () => {
                 {(pathname === "/login" || pathname === "/") && !isSubmitting && "Log in"}
                 {isSubmitting && <Spinner />}
             </button>
+            {(pathname === "/login" || pathname === "/") ?
+                <div className='w-full text-center'>
+                    <a href='/forgot-password' className='text-sm text-center text-blue-500'>Forgot password</a>
+                </div> : null}
             <div className='text-center text-sm mt-1'>
                 <p>Don't have an account yet?</p>
                 <a href={pathname === "/register" ? "/login" : "/register"} className='text-[#759FF2]'>{pathname === "/register" ? "Sign In" : "Sign Up"}</a>
             </div>
+
 
         </form>
     );
