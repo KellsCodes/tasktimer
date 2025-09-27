@@ -5,10 +5,13 @@ let transporter;
 if (process.env.NODE_ENV === "production") {
   // Sendgrid
   transporter = nodemailer.createTestAccount({
-    service: "SendGrid",
+    service: process.env.GMAIL_SERVICE,
+    host: process.env.GMAIL_HOST,
+    port: 587,
+    secure: false,
     auth: {
-      user: process.env.SENDGRID_USER,
-      pass: process.env.SENDGRID_PASS,
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
     },
   });
 } else {
