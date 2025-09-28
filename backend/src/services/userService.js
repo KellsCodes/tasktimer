@@ -15,6 +15,7 @@ import {
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendVerificationEmail } from "./mail.service.js";
+import { OAuth2Client } from "google-auth-library";
 
 export const registerUser = async (userData) => {
   const { username, email, password, confirm_password } = userData;
@@ -87,7 +88,14 @@ export const loginUser = async (email, password) => {
   return {
     accessToken,
     refreshToken,
-    user: { id: user.id, email: user.email, username: user.username, firstname: user?.profile?.firstname, lastname: user?.profile?.lastname, profileImage: user?.profile?.profileImage },
+    user: {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      firstname: user?.profile?.firstname,
+      lastname: user?.profile?.lastname,
+      profileImage: user?.profile?.profileImage,
+    },
   };
 };
 
@@ -156,11 +164,50 @@ export const generateNewRefreshToken = async (token) => {
 };
 
 export const getUserByEmailService = async (email) => {
-	if (!email) return {statusCode: 400, result: {code: 2, message: "no record found"}}
-	try {
-	const user = await getUserByEmail(email)
-	return {statusCode: 200, result: {code: 1, user: {id: user.id, email: user.email, username: user.username, firstname: user?.profile?.firstname || null, lastname: user?.profile?.lastname || null, profileImage: user?.profile?.profileImage || null}, message: "user found"}}
-	} catch(err){
-		return {statusCode: 400, result: {code: 2, message: "no record found"}}
-	}
-}
+  if (!email)
+    return { statusCode: 400, result: { code: 2, message: "no record found" } };
+  try {
+    const user = await getUserByEmail(email);
+    return {
+      statusCode: 200,
+      result: {
+        code: 1,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          firstname: user?.profile?.firstname || null,
+          lastname: user?.profile?.lastname || null,
+          profileImage: user?.profile?.profileImage || null,
+        },
+        message: "user found",
+      },
+    };
+  } catch (err) {
+    return { statusCode: 400, result: { code: 2, message: "no record found" } };
+  }
+};
+
+export const loginWithGoogle = (req, res) => {
+  const state = crypto.randomBytes(16).toString("hex");
+  // short-lived state cookie to guard against CSRF
+  res.cookie("oauth_state", state, {
+    httpOly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV,
+    maxAge: 5 * 60 * 1000,
+  });
+
+  const params = new URLSearchParams({
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+    response_type: "code",
+    scope: "openid email profile",
+    access_type: "offline",
+    prompt: "consent",
+    state,
+  });
+  res.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`
+  );
+};
