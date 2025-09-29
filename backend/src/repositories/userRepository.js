@@ -37,6 +37,21 @@ export const getUserById = async (id) => {
   });
 };
 
+export const getUserByGoogleId = async (googleId) => {
+  return await prisma.user.findUnique({
+    where: { googleId },
+    include: {
+      profile: {
+        select: {
+          firstname: true,
+          lastname: true,
+          profileImage: true,
+        },
+      },
+    },
+  });
+};
+
 export const createToken = async (tokenData) => {
   return await prisma.refreshToken.create({
     ...tokenData,
@@ -164,3 +179,4 @@ export const refreshStoredToken = async (token) => {
     },
   };
 };
+

@@ -21,6 +21,7 @@ model User {
   password        String?   // for local auth, null if using OAuth
   provider        String    @default("local") // "local" or "google"
   verifiedAt      DateTime? // null until verified
+  googleId        String?   @unique
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   profile         Profile?
@@ -89,6 +90,7 @@ model Tasks {
   
   userId          Int
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminderLogs    ReminderLog[]
   
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt()
@@ -96,4 +98,25 @@ model Tasks {
   @@index([status, startAt])
   @@index([status, endAt])
   @@index([userId])
+}
+
+
+model ReminderLog {
+  id              Int       @id @default(autoincrement())
+  taskId          Int     
+  task            Tasks     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  reminderType    ReminderType
+  sentAt          DateTime  @default(now())
+
+  @@unique([taskId, reminderType])
+  @@index([sentAt])
+}
+
+enum ReminderType {
+  BEFORE_24H
+  BEFORE_1H
+  AT_START
+  BEFORE_1H_END
+  AT_END
 }

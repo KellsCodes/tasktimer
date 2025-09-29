@@ -4,7 +4,9 @@ import {
   loginUser,
   registerUser,
   userLogOut,
-  getUserByEmailService
+  getUserByEmailService,
+  loginWithGoogle,
+  loginWithGoogleCallback,
 } from "../services/userService.js";
 
 import { loginSchema, userSchema } from "../validations/userValidations.js";
@@ -59,10 +61,10 @@ export const login = async (req, res) => {
 };
 
 export const getUserByEmailController = async (req, res) => {
-	const email = req.user.email
-	const {statusCode, result} = await getUserByEmailService(email)
-	return res.status(statusCode).json(result)
-}
+  const email = req.user.email;
+  const { statusCode, result } = await getUserByEmailService(email);
+  return res.status(statusCode).json(result);
+};
 
 export const emailVerification = async (req, res) => {
   const token = req.body;
@@ -86,4 +88,14 @@ export const refreshTokenController = async (req, res) => {
   const { refreshToken } = req.body;
   const { statusCode, result } = await generateNewRefreshToken(refreshToken);
   return res.status(statusCode).json(result);
+};
+
+export const loginWithGoogleController = (req, res) => {
+  loginWithGoogle(res);
+};
+
+export const loginWithGoogleCallbackController = async (req, res) => {
+  const { code, state } = req.query;
+  const stateCookie = req.cookies.oauth_state;
+  await loginWithGoogleCallback(res, code, state, stateCookie);
 };
