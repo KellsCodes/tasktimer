@@ -6,6 +6,7 @@ import {
   userLogOut,
   getUserByEmailService,
   loginWithGoogle,
+  loginWithGoogleCallback,
 } from "../services/userService.js";
 
 import { loginSchema, userSchema } from "../validations/userValidations.js";
@@ -90,5 +91,11 @@ export const refreshTokenController = async (req, res) => {
 };
 
 export const loginWithGoogleController = (req, res) => {
-  loginWithGoogle(req, res);
+  loginWithGoogle(res);
+};
+
+export const loginWithGoogleCallbackController = async (req, res) => {
+  const { code, state } = req.query;
+  const stateCookie = req.cookies.oauth_state;
+  await loginWithGoogleCallback(res, code, state, stateCookie);
 };

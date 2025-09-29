@@ -8,6 +8,7 @@ import {
   createUser,
   emailVerificationToken,
   getUserByEmail,
+  getUserByGoogleId,
   logOutUser,
   refreshStoredToken,
 } from "../repositories/userRepository.js";
@@ -16,6 +17,9 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendVerificationEmail } from "./mail.service.js";
 import { OAuth2Client } from "google-auth-library";
+import axios from "axios";
+import { prisma } from "../config/db.js";
+import { console } from "inspector";
 
 export const registerUser = async (userData) => {
   const { username, email, password, confirm_password } = userData;
@@ -188,13 +192,13 @@ export const getUserByEmailService = async (email) => {
   }
 };
 
-export const loginWithGoogle = (req, res) => {
+export const loginWithGoogle = (res) => {
   const state = crypto.randomBytes(16).toString("hex");
   // short-lived state cookie to guard against CSRF
   res.cookie("oauth_state", state, {
     httpOly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV,
+    secure: process.env.NODE_ENV === "production",
     maxAge: 5 * 60 * 1000,
   });
 
@@ -207,7 +211,167 @@ export const loginWithGoogle = (req, res) => {
     prompt: "consent",
     state,
   });
+
   res.redirect(
     `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`
   );
+};
+
+// Google auth callback
+export const loginWithGoogleCallback = async (
+  res,
+  code,
+  state,
+  stateCookie
+) => {
+  try {
+    if (!state || state !== stateCookie) {
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?error=Invalid_State`
+      );
+    }
+
+    const params = new URLSearchParams();
+    params.append("client_id", process.env.GOOGLE_CLIENT_ID);
+    params.append("client_secret", process.env.GOOGLE_CLIENT_SECRET);
+    params.append("code", code);
+    params.append("redirect_uri", process.env.GOOGLE_REDIRECT_URI);
+    params.append("grant_type", "authorization_code");
+
+    const tokenRes = axios
+      .post("https://oauth2.googleapis.com/token", params)
+      .then((response) => {
+        return {
+          access_token: response.data.access_token,
+          refresh_token: response.data.refresh_token,
+          id_token: response.data.id_token,
+        };
+      })
+      .catch((error) => {
+        return { error };
+      });
+
+    // console.log(tokenRes);
+
+    const tokenData = await tokenRes;
+    if (tokenData?.error) {
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?error=Invalid_State`
+      );
+    }
+
+    console.log("Checkpoint A - after tokenData");
+
+    // Validate id_token with google's token info endpoint
+    const infoRes = await axios
+      .get(
+        `https://oauth2.googleapis.com/tokeninfo?id_token=${tokenData.id_token}`
+      )
+      .then((response) => response["data"]);
+    console.log(infoRes);
+    console.log("Checkpoint B - after infoRes");
+    if (infoRes.aud !== process.env.GOOGLE_CLIENT_ID)
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?error=Token_aud_mismatch`
+      );
+    if (!infoRes.email)
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?error=No_email_in_token`
+      );
+
+    // Find or create user
+    let user = await getUserByGoogleId(infoRes.sub);
+    const profileData = {
+      profileImage: infoRes.picture || null,
+      firstname: infoRes.given_name || null,
+      lastname: infoRes.family_name || null,
+    };
+    if (!user) {
+      // If user with same email exists (maybe local), attach googleId; else create
+      user = await getUserByEmail(infoRes.email);
+      if (user) {
+        console.log("Checkpoint C - before user create/update");
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            googleId: infoRes.sub,
+            provider: "google",
+            verifiedAt: new Date(),
+            profile: {
+              upsert: {
+                update: profileData,
+                create: profileData,
+              },
+            },
+          },
+          include: {
+            profile: {
+              select: {
+                firstname: true,
+                lastname: true,
+                profileImage: true,
+              },
+            },
+          },
+        });
+      } else {
+        user = await prisma.user.create({
+          data: {
+            email: infoRes.email,
+            username: infoRes.email.split("@")[0],
+            googleId: infoRes.sub,
+            provider: "google",
+            verifiedAt: new Date(),
+            profile: {
+              create: profileData,
+            },
+          },
+          include: {
+            profile: {
+              select: {
+                firstname: true,
+                lastname: true,
+                profileImage: true,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    console.log("started processing", user);
+
+    // Generate tokens
+    const accessToken = generateAccessToken({
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    });
+    const refreshToken = generateRefreshToken({
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    });
+
+    console.log("user:", user);
+    console.log({ accessToken, refreshToken });
+    const cookieOption = {
+      httpOly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    };
+    res.cookie("accessToken", accessToken, cookieOption);
+    res.cookie("refreshToken", refreshToken, cookieOption);
+
+    // Clear state cookie and redirect to frontend
+    res.clearCookie("oauth_state");
+
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+  } catch (error) {
+    console.log(error);
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/login?error=Invaalid_State`
+    );
+  }
 };

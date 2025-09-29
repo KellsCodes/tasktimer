@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import routesGroup from "./routes/routes.js";
 import { connectDB } from "./config/db.js";
 import { errorLogging } from "./errorLogging/error.js";
@@ -13,6 +14,7 @@ const port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(cookieParser());
 
 // Routes
 app.get("/", (req, res) => {
