@@ -15,7 +15,7 @@ import {
 
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { sendVerificationEmail } from "./mail.service.js";
+import { sendAuthActionEmail } from "./mail.service.js";
 import { OAuth2Client } from "google-auth-library";
 import axios from "axios";
 import { prisma } from "../config/db.js";
@@ -50,7 +50,7 @@ export const registerUser = async (userData) => {
   });
   // Send email verification token
   const emailToken = await generateEmailToken(newUser.id);
-  await sendVerificationEmail(newUser, emailToken.token);
+  await sendAuthActionEmail(newUser, emailToken.token, 1); // 1 stands for email verification type
   return {
     statusCode: 200,
     result: {
@@ -77,7 +77,7 @@ export const loginUser = async (email, password) => {
   // Send email verification token
   if (!user.verifiedAt) {
     const emailToken = await generateEmailToken(user.id);
-    await sendVerificationEmail(user, emailToken.token);
+    await sendAuthActionEmail(user, emailToken.token, 1); // 1 stands for email verification type
     return { code: 3, message: `Email verifiction link sent to ${user.email}` };
   }
   const accessToken = generateAccessToken(user);

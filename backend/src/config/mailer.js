@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 let transporter;
 
 if (process.env.NODE_ENV === "production") {
-  // Sendgrid
+  // Gmail SMTP
   transporter = nodemailer.createTestAccount({
     service: process.env.GMAIL_SERVICE,
     host: process.env.GMAIL_HOST,
