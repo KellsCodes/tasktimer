@@ -7,8 +7,7 @@ import { getUserByEmail, getUserById } from "../repositories/userRepository.js";
 import { updatePasswordSchema } from "../validations/passwordValidations.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { sendResetPasswordEmail } from "./mail.service.js";
-// import { sendVerificationEmail } from "./mail.service.js";
+import { sendAuthActionEmail } from "./mail.service.js";
 
 export const updatePasswordService = async (userId, passwordData) => {
   const validData = updatePasswordSchema.validate(passwordData);
@@ -97,7 +96,7 @@ export const requestPasswordChange = async (email) => {
       expiresAt,
       userId: user.id,
     });
-    await sendResetPasswordEmail(user, emailToken);
+    await sendAuthActionEmail(user, emailToken, 2); // 2 stands for password reset type
     return {
       statusCode: 200,
       result: { code: 1, message: `Password reset link sent to ${email}` },
