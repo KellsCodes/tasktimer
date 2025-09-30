@@ -7,6 +7,7 @@ import api from '@/lib/axios';
 import { Spinner } from './spinner';
 import Cookies from 'js-cookie';
 import { useUser } from '../authProvider';
+import axios from 'axios';
 // import { GrLinkedin } from 'react-icons/gr';
 // import { SiFacebook } from 'react-icons/si';
 
@@ -113,11 +114,18 @@ const Register = () => {
         >
             <div className='space-y-6 mb-6'>
                 <h2 className='font-bold text-4xl'>{pathname === "/register" ? "Sign Up" : "Log In"}</h2>
-                <p className='px-5 text-sm text-center'>By creating a TaskIt account, you agree to our <a href="#" className='text-[#759FF2]'>Terms of Service</a> and <a href="#" className='text-[#759FF2]'>Privacy Policy</a></p>
+                <p className='px-5 text-sm text-center'>By creating a Time.It account, you agree to our <a href="#" className='text-[#759FF2]'>Terms of Service</a> and <a href="#" className='text-[#759FF2]'>Privacy Policy</a></p>
 
             </div>
             <div className='space-y-3'>
+
                 <button
+                    type='button'
+                    onClick={() => {
+                        // setError(null);
+                        // setMessage(null)
+                        window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google`
+                    }}
                     className='w-full flex items-center justify-center gap-x-3 h-[50px] border p-3 rounded-[6px] font-medium text-sm hover:bg-[#23374C] hover:text-white transition-all duration-800 ease-in-out cursor-pointer'
                 >
                     <FcGoogle className='text-[22px]' />

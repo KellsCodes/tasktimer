@@ -95,7 +95,8 @@ export default function ProfilePage() {
                                 src={
                                     data?.profileImage?.type?.startsWith("image/") ?
                                         URL.createObjectURL(data?.profileImage) :
-                                        `${process.env.NEXT_PUBLIC_API_BASE_URL}/${data?.profileImage}`
+                                        !/storage/.test(data?.profileImage) ? data.profileImage :
+                                            `${process.env.NEXT_PUBLIC_API_BASE_URL}/${data?.profileImage}`
                                 }
                                 alt="profile-img"
                                 loading="lazy"
@@ -131,7 +132,7 @@ export default function ProfilePage() {
                     <div>
                         <label htmlFor="username">Username</label>
                         <Input readOnly
-                            value={data?.username}
+                            value={data?.username || ""}
                             placeholder={`username`}
                             className={`cursor-not-allowed h-[50px] px-3 focus:outline-none focus:ring-1 focus:ring-prim transition-all duration-500 ease-in-out placeholder:text-muted-foreground placeholder:text-sm`}
                             name="username"
@@ -141,7 +142,7 @@ export default function ProfilePage() {
                     <div>
                         <label htmlFor="email">Email</label>
                         <Input readOnly
-                            value={data?.email}
+                            value={data?.email || ""}
                             placeholder={`youremail`}
                             className={`cursor-not-allowed h-[50px] px-3 focus:outline-none focus:ring-1 focus:ring-prim transition-all duration-500 ease-in-out placeholder:text-muted-foreground placeholder:text-sm`}
                             name="email"
@@ -152,7 +153,7 @@ export default function ProfilePage() {
                     <div>
                         <label htmlFor="firstname" >Firstname</label>
                         <Input
-                            value={data?.firstname}
+                            value={data?.firstname || ""}
                             placeholder={`Firstname`}
                             className={`h-[50px] px-3 focus:outline-none focus:ring-1 focus:ring-prim transition-all duration-500 ease-in-out placeholder:text-muted-foreground placeholder:text-sm`}
                             name="firstname"
@@ -165,7 +166,7 @@ export default function ProfilePage() {
                     <div>
                         <label htmlFor="lastname">Lastname</label>
                         <Input
-                            value={data?.lastname}
+                            value={data?.lastname || ""}
                             placeholder={"Lastname"}
                             className={`h-[50px] px-3 focus:outline-none focus:ring-1 focus:ring-prim transition-all duration-500 ease-in-out placeholder:text-muted-foreground placeholder:text-sm`}
                             name="lastname"
@@ -178,7 +179,7 @@ export default function ProfilePage() {
                     <div>
                         <label htmlFor="profession">Profession</label>
                         <Input
-                            value={data?.profession}
+                            value={data?.profession || ""}
                             placeholder={`Profession e.g Analyst`}
                             className={`h-[50px] px-3 focus:outline-none focus:ring-1 focus:ring-prim transition-all duration-500 ease-in-out`}
                             name="profession"
