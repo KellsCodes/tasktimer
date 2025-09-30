@@ -16,10 +16,8 @@ import {
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendAuthActionEmail } from "./mail.service.js";
-import { OAuth2Client } from "google-auth-library";
 import axios from "axios";
 import { prisma } from "../config/db.js";
-import { console } from "inspector";
 
 export const registerUser = async (userData) => {
   const { username, email, password, confirm_password } = userData;
@@ -69,7 +67,7 @@ export const loginUser = async (email, password) => {
     return { code: 2, message: "Invalid email or password" };
   }
   if (user && !user.password && user.provider === "google") {
-  	return { code: 2, message: "Invalid email or password" };
+    return { code: 2, message: "Invalid email or password" };
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
@@ -269,7 +267,7 @@ export const loginWithGoogleCallback = async (
         `https://oauth2.googleapis.com/tokeninfo?id_token=${tokenData.id_token}`
       )
       .then((response) => response["data"]);
-      
+
     if (infoRes.aud !== process.env.GOOGLE_CLIENT_ID)
       return res.redirect(
         `${process.env.FRONTEND_URL}/login?error=Token_aud_mismatch`
@@ -351,7 +349,7 @@ export const loginWithGoogleCallback = async (
     });
 
     const cookieOption = {
-      httpOly: false,
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -359,13 +357,13 @@ export const loginWithGoogleCallback = async (
     res.cookie("accessToken", accessToken, cookieOption);
     res.cookie("refreshToken", refreshToken, cookieOption);
     // Save refresh token in DB for invalidation support
-  await createToken({
-    data: {
-      refreshToken: refreshToken,
-      userId: user.id,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // expires in 7 days
-    },
-  });
+    await createToken({
+      data: {
+        refreshToken: refreshToken,
+        userId: user.id,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // expires in 7 days
+      },
+    });
 
     // Clear state cookie and redirect to frontend
     res.clearCookie("oauth_state");
