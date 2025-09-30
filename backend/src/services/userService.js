@@ -68,6 +68,9 @@ export const loginUser = async (email, password) => {
   if (!user) {
     return { code: 2, message: "Invalid email or password" };
   }
+  if (user && !user.password && user.provider === "google") {
+  	return { code: 2, message: "Invalid email or password" };
+  }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return { code: 2, message: "Invalid email or password" };
@@ -260,16 +263,13 @@ export const loginWithGoogleCallback = async (
       );
     }
 
-    console.log("Checkpoint A - after tokenData");
-
     // Validate id_token with google's token info endpoint
     const infoRes = await axios
       .get(
         `https://oauth2.googleapis.com/tokeninfo?id_token=${tokenData.id_token}`
       )
       .then((response) => response["data"]);
-    console.log(infoRes);
-    console.log("Checkpoint B - after infoRes");
+      
     if (infoRes.aud !== process.env.GOOGLE_CLIENT_ID)
       return res.redirect(
         `${process.env.FRONTEND_URL}/login?error=Token_aud_mismatch`
@@ -290,7 +290,6 @@ export const loginWithGoogleCallback = async (
       // If user with same email exists (maybe local), attach googleId; else create
       user = await getUserByEmail(infoRes.email);
       if (user) {
-        console.log("Checkpoint C - before user create/update");
         user = await prisma.user.update({
           where: { id: user.id },
           data: {
@@ -339,8 +338,6 @@ export const loginWithGoogleCallback = async (
       }
     }
 
-    console.log("started processing", user);
-
     // Generate tokens
     const accessToken = generateAccessToken({
       id: user.id,
@@ -353,8 +350,6 @@ export const loginWithGoogleCallback = async (
       username: user.username,
     });
 
-    console.log("user:", user);
-    console.log({ accessToken, refreshToken });
     const cookieOption = {
       httpOly: false,
       secure: process.env.NODE_ENV === "production",
@@ -363,6 +358,14 @@ export const loginWithGoogleCallback = async (
     };
     res.cookie("accessToken", accessToken, cookieOption);
     res.cookie("refreshToken", refreshToken, cookieOption);
+    // Save refresh token in DB for invalidation support
+  await createToken({
+    data: {
+      refreshToken: refreshToken,
+      userId: user.id,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // expires in 7 days
+    },
+  });
 
     // Clear state cookie and redirect to frontend
     res.clearCookie("oauth_state");
