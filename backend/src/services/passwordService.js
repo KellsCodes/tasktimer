@@ -96,7 +96,7 @@ export const requestPasswordChange = async (email) => {
       expiresAt,
       userId: user.id,
     });
-    await sendAuthActionEmail(user, emailToken, 2); // 2 stands for password reset
+    await sendAuthActionEmail(user, emailToken, 2); // 2 stands for password reset type
     return {
       statusCode: 200,
       result: { code: 1, message: `Password reset link sent to ${email}` },
