@@ -5,11 +5,15 @@ FROM oven/bun:latest
 
 WORKDIR /app
 
-COPY package.json ./
+RUN apt-get update -y && apt-get install -y openssl
+
+COPY package.json bun.lock* ./
 RUN bun install --frozen-lockfile
 
 COPY . .
 
-EXPOSE 3000
+RUN bunx prisma generate
 
-CMD ["bun", "run", "server.js"]
+EXPOSE 5001
+
+CMD ["bun", "start"]

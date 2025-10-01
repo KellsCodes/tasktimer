@@ -31,7 +31,7 @@ export const sendAuthActionEmail = async (user, token, type) => {
   try {
     const mailBody = await ejs.renderFile(
       path.join(__dirname, "../utils/templates/authEmailTemplate.ejs"),
-      { data: { url, name: user?.firstname || user.username, message } },
+      { data: { url, name: user?.profile?.firstname || user.username, message } },
       {
         async: true,
       }
