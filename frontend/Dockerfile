@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY package.json bun.lock* ./
 
-RUN bun install --frozen-lockfile
+# RUN bun install --frozen-lockfile
+RUN bun pm cache rm \
+  && bun install --no-cache --frozen-lockfile
 
 COPY . .
 
