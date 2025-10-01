@@ -16,22 +16,26 @@ const attachments = [
 ];
 
 export const sendAuthActionEmail = async (user, token, type) => {
-  let message, subject, url; // type ===> 1 for email verification email, 2 for password reset email
+  let message, subject, url, btnText; // type ===> 1 for email verification email, 2 for password reset email
   if (type === 1) {
     message =
       "Thanks for signing up! Please verify your email by clicking the button below:";
     subject = "Verify your email address";
     url = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+    btnText = "Verify Email";
   } else {
     message =
       "You received this email because you requested a password reset. Click below to reset your password.";
     subject = "Reset password";
     url = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    btnText = "Reset Password";
   }
   try {
     const mailBody = await ejs.renderFile(
       path.join(__dirname, "../utils/templates/authEmailTemplate.ejs"),
-      { data: { url, name: user?.profile?.firstname || user.username, message } },
+      {
+        data: { url, name: user?.profile?.firstname || user.username, message, btnText },
+      },
       {
         async: true,
       }
