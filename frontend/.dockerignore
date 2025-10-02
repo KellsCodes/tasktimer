@@ -1,0 +1,43 @@
+# Node / Bun dependencies
+node_modules
+bun.lockb
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Next.js build output
+.next
+out
+
+# Logs
+*.log
+logs
+*.pid
+*.seed
+*.pid.lock
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+.idea
+.vscode
+
+# Environment files (you’ll mount them instead)
+.env
+.env.*.local
+
+# Docker-specific
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Tests and coverage
+coverage
+*.spec.js
+*.test.js
+__tests__/
