@@ -1,14 +1,59 @@
-version: "3.8"
+version: "3.9"
 services:
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: tasktimer-frontend
+    image: timeit-frontend
+    container_name: timeit-frontend-container
     ports:
       - "3000:3000"
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules  #prevent overwriting node_modules
+    depends_on:
+      - backend
+    networks:
+      - app-network
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: timeit-backend
+    container_name: timeit-backend-container
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./.env
     volumes:
-      - ./frontend:/app
-      - /app/node_modules  #prevent overwriting node_modules
-    environment:
-      - NODE_ENV=development
+      - backend_uploads:/storage # persistent storage for user files
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+  
+  db:
+    image: mysql:8.0
+    container_name: timeit-db
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - db_data:/var/lib/mysql # persistent MySQL data
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  db_data: # named volume for MySQL data
+  backend_uploads: # named volume for backend file uploads
+
+networks:
+  app-network:
+    driver: bridge
