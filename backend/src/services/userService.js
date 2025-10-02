@@ -228,7 +228,7 @@ export const loginWithGoogleCallback = async (
   try {
     if (!state || state !== stateCookie) {
       return res.redirect(
-        `${process.env.FRONTEND_URL}/login?error=Invalid_State`
+        `${process.env.FRONTEND_URL}/login?error=true`
       );
     }
 
@@ -257,7 +257,7 @@ export const loginWithGoogleCallback = async (
     const tokenData = await tokenRes;
     if (tokenData?.error) {
       return res.redirect(
-        `${process.env.FRONTEND_URL}/login?error=Invalid_State`
+        `${process.env.FRONTEND_URL}/login?error=true`
       );
     }
 
@@ -370,9 +370,9 @@ export const loginWithGoogleCallback = async (
 
     res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
   } catch (error) {
-    console.log(error);
+    console.log("Error:", error);
     return res.redirect(
-      `${process.env.FRONTEND_URL}/login?error=Invaalid_State`
+      `${process.env.FRONTEND_URL}/login?error=true`
     );
   }
 };

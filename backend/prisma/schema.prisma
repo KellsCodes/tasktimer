@@ -17,7 +17,7 @@ datasource db {
 model User {
   id              Int       @id @default(autoincrement())
   email           String    @unique
-  username        String?   @db.VarChar(12)
+  username        String?   @db.VarChar(50)
   password        String?   // for local auth, null if using OAuth
   provider        String    @default("local") // "local" or "google"
   verifiedAt      DateTime? // null until verified
@@ -33,10 +33,10 @@ model User {
 
 model Profile {
   id              Int @id @default(autoincrement())
-  firstname       String? @db.VarChar(20)
-  lastname        String? @db.VarChar(20)
-  profession      String? @db.VarChar(25)
-  profileImage    String? @db.VarChar(255)
+  firstname       String? @db.VarChar(50)
+  lastname        String? @db.VarChar(50)
+  profession      String? @db.VarChar(100)
+  profileImage    String? @db.VarChar(256)
   userId          Int     @unique
   user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)   
 }
@@ -83,11 +83,6 @@ model Tasks {
   endAt           DateTime
   timeZone        String    @db.VarChar(64)
 
-  localStartDate  String?   @db.VarChar(10)
-  localStartHour  Int?
-  localEndDate    String?   @db.VarChar(64)
-  localEndHour    Int?      
-  
   userId          Int
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   reminderLogs    ReminderLog[]
