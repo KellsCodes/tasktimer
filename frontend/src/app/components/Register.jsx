@@ -167,7 +167,7 @@ const Register = () => {
                             name="username"
                             value={form.username}
                             minLength={3}
-                            maxLength={30}
+                            maxLength={40}
                             onChange={handleChange}
                             autoComplete="username"
                             className='w-full h-[50px] mt-1 border border-gray-300 rounded-[8px] px-3 focus:outline-none focus:ring-1 focus:ring-[#22D172] transition-all duration-500 ease-in-out'

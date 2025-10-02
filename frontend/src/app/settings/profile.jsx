@@ -160,7 +160,7 @@ export default function ProfilePage() {
                             id="firstname"
                             onChange={handleChange}
                             minLength={3}
-                            maxLength={30}
+                            maxLength={40}
                         />
                     </div>
                     <div>
@@ -173,7 +173,7 @@ export default function ProfilePage() {
                             id="lastname"
                             onChange={handleChange}
                             minLength={3}
-                            maxLength={30}
+                            maxLength={40}
                         />
                     </div>
                     <div>
@@ -186,7 +186,7 @@ export default function ProfilePage() {
                             id="profession"
                             onChange={handleChange}
                             minLength={3}
-                            maxLength={30}
+                            maxLength={50}
                         />
                     </div>
                     <Button

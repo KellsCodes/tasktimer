@@ -111,7 +111,7 @@ const Tasks = forwardRef(({ type, data, setData, setIsSubmitting, isSubmitting }
                     onChange={handleChange}
                     className={''}
                     minLength={3}
-                    maxLength={30}
+                    maxLength={150}
                 />
             </div>
             <div className="flex gap-4">
