@@ -285,7 +285,7 @@ export const loginWithGoogleCallback = async (
       lastname: infoRes.family_name || null,
     };
     if (!user) {
-      // If user with same email exists (maybe local), attach googleId; else create
+      // If user with same email exists 7b6d4d9aaa38(maybe local), attach googleId; else create
       user = await getUserByEmail(infoRes.email);
       if (user) {
         user = await prisma.user.update({
