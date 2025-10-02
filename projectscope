@@ -1,0 +1,74 @@
+Project Code: DevOps 01
+Project Name: Tasktimer
+Description:
+ A simple todo app with reminder when task is 50% due or approaching due or due, it can also remind users to pickup task according to date chosen(cronjob reminder)
+Requirements:
+1. Frontend (React, Tailwind)
+2. Backend (ExpressJS, JWTAuth, MySQL, CronJob, RabbitMQ)
+3. Container (Docker, Docker Compose(local dev))
+4. Orchestration (Kubernetes(kubernetes cronjob))
+===========================================================>
+Design Specifications:
+===========================================================>
+1. FrontEnd:
+a. User should be able to login(JWT, OAuth)
+b. User should be able to signup (Normal flow and OAuth)
+c. User should be able to create profile
+d. User should be able to update profile
+e. User should be able to Create task
+f. User should be able to update task
+f. User should be able to delete task task
+g. User should be able to Get task(s)
+=============================================
+(SIGNUP Oauth)
+1. User email
+2. User password and confirm password
+3. User username
+4. Use of OAuth
+============================================
+(LOGIN Oauth)
+1. User email || username
+2. User password
+3. Use of OAuth
+===========================================
+(PROFILE completed)
+1. Firstname
+2. Lastname
+3. Profession
+4. Interest (grouping)
+5. Profile image
+==========================================
+(SECURITY (completed(we can use otp to make it more secure later)))
+1. Update password(use password confirmation with email)
+=========================================
+(TASKS: CREATE | UPDATE)
+1. Task title
+2. Status(pending, Running, completed)
+3. Start date
+4. End date
+5. Created at date
+6. Reminder (Start date and time(24 hours and 30mins to start time, 1 hr to end))
+7. The create and update should be on a modal
+8. The delete and update btns should be on the actions column with tool tip
+=========================================
+
+(BACKEND API's)
+1. User sign up (normal flow || OAuth flow)
+2. User log in (normal || OAuth)
+3. User create and update profile
+4. User set security
+5. User delete account
+6. User get tasks
+7. User delete task(s)
+8. Emailing (user verification, account recovery, reminder)
+=========================================
+
+(TABLE Design)
+1. users table (id, email, username, password(hashed), created_at, updated_at)
+2. profile table (id, user_id(user related), firstname, lastname, profession, image_uri, created_at, updated_at)
+3. tasks table (id, user_id, task title, status(1=pending,2=running,3=completed, 4=cancelled), created_at, updated_at)
+4. job table/ Reminder Log (id, task_id, reminderType=[24hoursBeforeStart, 1hourBeforeStart, AtStart, 1hourBeforeEnd, AtEnd], created_at, updated_at)
+5. account recovery token table (id, user_id, recovery_code, expires_at, created_at)
+6. user email verification token table (id, user_id, token, expires_at, created_at)
+7. Refresh token table (id, user_id, token, expires_at, created_at)
+8. ResetPasswordToken table (id, token, user_id(user related), created_at)
