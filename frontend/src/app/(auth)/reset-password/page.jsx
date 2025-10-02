@@ -4,7 +4,13 @@ import { Spinner } from "@/app/components/spinner";
 
 export default function Page() {
     return (
-        <Suspense fallback={<div className="w-full h-[90vh] flex items-center justify-center"><Spinner /></div>}>
+        <Suspense
+            fallback={
+                <div className="w-full h-[90vh] flex items-center justify-center">
+                    <Spinner spinnerColor={"border-prim"} />
+                </div>
+            }
+        >
             <ResetPasswordPage />
         </Suspense>
     );
