@@ -83,6 +83,11 @@ model Tasks {
   endAt           DateTime
   timeZone        String    @db.VarChar(64)
 
+  localStartDate  String?   @db.VarChar(64)
+  localStartHour  Int?
+  localEndDate    String?   @db.VarChar(64)
+  localEndHour    Int?
+
   userId          Int
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   reminderLogs    ReminderLog[]
