@@ -17,7 +17,7 @@ export function UserProvider({ children }) {
             setUser(JSON.parse(storedUser))
         }
 
-        // incase user deletes user object from localstorage but the access token is still available, get user data
+        // incase user deletes user object from localstorage or Google authentication but the access token is still available on the cookie, get user data
         if (!localStorage.getItem("user") && Cookies.get("accessToken")) {
             (async () => {
                 try {

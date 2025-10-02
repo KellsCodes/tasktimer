@@ -4,7 +4,7 @@ import UserEmailVerification from "./UserEmailVerification";
 
 export default function Page() {
     return (
-        <Suspense fallback={<div className="w-full h-90vh flex items-center justify-center"><Spinner /></div>}>
+        <Suspense fallback={<div className="w-full h-[90vh] flex items-center justify-center"><Spinner /></div>}>
             <UserEmailVerification />
         </Suspense>
     );
