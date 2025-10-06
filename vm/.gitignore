@@ -1,0 +1,7 @@
+.vagrant
+cilium.sh
+provision.sh 
+worker.out
+cp.out    
+join.sh
+calico-3.30.3*
