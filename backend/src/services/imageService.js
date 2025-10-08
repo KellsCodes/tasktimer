@@ -1,7 +1,8 @@
 import sharp from "sharp";
 import path from "path";
 import fs from "fs";
-import { saveFile } from "../utils/storage.utils.js";
+import { cloudImageUpload, deleteCloudImage } from "../utils/uploadImageToCloud.js";
+// import { saveFile } from "../utils/storage.utils.js";
 
 export const processImage = async (file, userId) => {
   try {
@@ -12,8 +13,17 @@ export const processImage = async (file, userId) => {
       .webp({ quality: 80 })
       .toBuffer();
     const filename = `profile_${userId}_${Date.now()}.webp`;
-    const filePath = await saveFile(processedBuffer, filename);
-    return filePath;
+
+    /** For saving to cloudinary service */
+    const response = await cloudImageUpload(processedBuffer, filename);
+    return {
+      profileImage: response.secure_url,
+      profileImageCloudID: response.public_id,
+    };
+
+    /** This is saving on local file system, uncomment to use it. Also enable it on profile service */
+    // const filePath = await saveFile(processedBuffer, filename);
+    // return filePath;
   } catch (error) {
     console.error(error.message);
     return null;
@@ -28,4 +38,16 @@ export const removeImage = async (oldProfileImage) => {
     return 0;
   }
   return 1;
+};
+
+export const deleteCloudProfileImage = async (profileImageCloudID) => {
+  try {
+    if (profileImageCloudID) {
+      const result = await deleteCloudImage(profileImageCloudID)
+    }
+    return 1;
+  } catch (error) {
+    console.log(error);
+    return 2;
+  }
 };

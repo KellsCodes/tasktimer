@@ -12,11 +12,11 @@ export const saveUserProfile = async (userId, profileData, file) => {
     if (file) {
       profileImagePath = await processImage(file, userId);
     }
-
     // save file in a DB
     const profile = await saveProfile(userId, {
       ...profileData,
-      profileImage: profileImagePath,
+      profileImage: profileImagePath?.profileImage || null,
+      profileImageCloudID: profileImagePath?.profileImageCloudID || null,
     });
 
     return {

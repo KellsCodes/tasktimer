@@ -1,5 +1,8 @@
 import { prisma } from "../config/db.js";
-import { removeImage } from "../services/imageService.js";
+import {
+  deleteCloudProfileImage,
+  removeImage,
+} from "../services/imageService.js";
 
 export const saveProfile = async (userId, profileData) => {
   // find existing profile
@@ -11,7 +14,11 @@ export const saveProfile = async (userId, profileData) => {
     existingProfile.profileImage &&
     profileData.profileImage
   ) {
-    await removeImage(existingProfile.profileImage);
+    /** This is for deleting cloud profile image */
+    await deleteCloudProfileImage(existingProfile?.profileImageCloudID);
+    
+    /** Use the block below for fs storage */
+    // await removeImage(existingProfile.profileImage);
   } else if (!profileData.profileImage) {
     delete profileData.profileImage;
   }
@@ -27,12 +34,12 @@ export const getUserProfile = async (userId) => {
   return await prisma.profile.findUnique({
     where: { userId },
     include: {
-    user: {
-      select: {
-        email: true,
-        username: true,
+      user: {
+        select: {
+          email: true,
+          username: true,
+        },
       },
     },
-  },
   });
 };

@@ -37,6 +37,7 @@ model Profile {
   lastname        String? @db.VarChar(50)
   profession      String? @db.VarChar(100)
   profileImage    String? @db.VarChar(256)
+  profileImageCloudID String?
   userId          Int     @unique
   user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)   
 }
