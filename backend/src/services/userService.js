@@ -227,7 +227,7 @@ export const loginWithGoogleCallback = async (
 ) => {
   try {
     if (!state || state !== stateCookie) {
-      return res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);
+      return res.redirect(`${process.env.FRONTEND_URL}/login?error=invalid-cookie`);
     }
 
     const params = new URLSearchParams();
@@ -254,7 +254,7 @@ export const loginWithGoogleCallback = async (
 
     const tokenData = await tokenRes;
     if (tokenData?.error) {
-      return res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);
+      return res.redirect(`${process.env.FRONTEND_URL}/login?error=invalid-token-data`);
     }
 
     // Validate id_token with google's token info endpoint
@@ -345,7 +345,7 @@ export const loginWithGoogleCallback = async (
     });
 
     const cookieOption = {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
