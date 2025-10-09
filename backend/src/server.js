@@ -8,7 +8,7 @@ import { errorLogging } from "./errorLogging/error.js";
 import { defaultHomePage } from "./utils/templates/defaultHomePage.js";
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 5001;
 
 // Middlewares
 app.use(express.json());

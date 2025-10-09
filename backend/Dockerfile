@@ -14,6 +14,6 @@ COPY . .
 
 RUN bunx prisma generate
 
-EXPOSE 5001
+# EXPOSE 5001
 
 CMD ["bun", "start"]
