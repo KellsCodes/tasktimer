@@ -363,7 +363,8 @@ export const loginWithGoogleCallback = async (
 
     // Clear state cookie and redirect to frontend
     res.clearCookie("oauth_state");
-    console.log("savedoauth: ", user);
+    console.log(`${process.env.FRONTEND_URL}dashboard`)
+    console.log("savedoauth: ", {user});
     const lastItem = process.env.FRONTEND_URL.slice(-1);
     if (lastItem === "/") {
       res.redirect(`${process.env.FRONTEND_URL}dashboard`);
