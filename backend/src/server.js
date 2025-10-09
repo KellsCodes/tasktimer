@@ -8,7 +8,7 @@ import { errorLogging } from "./errorLogging/error.js";
 import { defaultHomePage } from "./utils/templates/defaultHomePage.js";
 
 const app = express();
-// const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 
 // Middlewares
 app.use(express.json());
@@ -28,14 +28,13 @@ errorLogging(app);
 // Connect remote DB and run server
 connectDB()
   .then(() => {
-    // app.listen(port, () => {
-    //   console.log(`Server running on port ${port}`);
-    // });
-    console.log("db connected");
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
   })
   .catch((error) => {
-    console.error("Failed to connect to mysql server:", error);
+    console.error("Failed to connect to mysql server: ", error);
     process.exit(1);
   });
 
-module.exports = app;
+// module.exports = app;
