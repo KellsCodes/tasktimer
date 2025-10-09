@@ -4,7 +4,7 @@ let transporter;
 
 if (process.env.NODE_ENV === "production") {
   // Gmail SMTP
-  transporter = nodemailer.createTestAccount({
+  transporter = nodemailer.createTransport({
     service: process.env.GMAIL_SERVICE,
     host: process.env.GMAIL_HOST,
     port: 587,
