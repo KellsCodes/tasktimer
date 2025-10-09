@@ -227,9 +227,7 @@ export const loginWithGoogleCallback = async (
 ) => {
   try {
     if (!state || state !== stateCookie) {
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/login?error=true`
-      );
+      return res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);
     }
 
     const params = new URLSearchParams();
@@ -256,9 +254,7 @@ export const loginWithGoogleCallback = async (
 
     const tokenData = await tokenRes;
     if (tokenData?.error) {
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/login?error=true`
-      );
+      return res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);
     }
 
     // Validate id_token with google's token info endpoint
@@ -367,12 +363,16 @@ export const loginWithGoogleCallback = async (
 
     // Clear state cookie and redirect to frontend
     res.clearCookie("oauth_state");
+    localStorage.setItem("savedoauth", user);
+    const lastItem = process.env.FRONTEND_URL.slice(-1);
+    if (lastItem === "/") {
+      res.redirect(`${process.env.FRONTEND_URL}dashboard`);
+    } else {
+      res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    }
 
-    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
   } catch (error) {
     console.log("Error:", error);
-    return res.redirect(
-      `${process.env.FRONTEND_URL}/login?error=true`
-    );
+    return res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);
   }
 };
