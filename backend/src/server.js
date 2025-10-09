@@ -11,7 +11,9 @@ const app = express();
 app.set("trust proxy", 1);
 const port = process.env.PORT || 5001;
 // Set up allowed origins
-const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : [];
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",")
+  : [];
 // CORS middleware options
 const corsOptions = {
   origin: function (origin, callback) {
@@ -21,6 +23,8 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 
 // Middlewares
