@@ -9,11 +9,23 @@ import { defaultHomePage } from "./utils/templates/defaultHomePage.js";
 
 const app = express();
 const port = process.env.PORT || 5001;
+// Set up allowed origins
+const allowedOrigins = [process.env.FRONTEND_URL];
+// CORS middleware options
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
 
 // Middlewares
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.use(cookieParser());
 
 // Routes
