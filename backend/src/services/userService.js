@@ -349,8 +349,8 @@ export const loginWithGoogleCallback = async (
     });
 
     const cookieOption = {
-      httpOnly: process.env.NODE_ENV !== "production" && true,
-      secure: process.env.NODE_ENV !== "production",
+      httpOnly: process.env.NODE_ENV === "production" && true,
+      secure: process.env.NODE_ENV === "production" && true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     };
@@ -373,8 +373,9 @@ export const loginWithGoogleCallback = async (
     console.log({
       accessToken,
       refreshToken,
-      userId: user.id
+      userId: user.id,
     });
+
     if (lastItem === "/") {
       res.redirect(`${process.env.FRONTEND_URL}dashboard`);
     } else {

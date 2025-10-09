@@ -8,6 +8,7 @@ import { errorLogging } from "./errorLogging/error.js";
 import { defaultHomePage } from "./utils/templates/defaultHomePage.js";
 
 const app = express();
+app.set("trust proxy", 1);
 const port = process.env.PORT || 5001;
 // Set up allowed origins
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : [];
