@@ -10,7 +10,7 @@ import { defaultHomePage } from "./utils/templates/defaultHomePage.js";
 const app = express();
 const port = process.env.PORT || 5001;
 // Set up allowed origins
-const allowedOrigins = [process.env.FRONTEND_URL];
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : [];
 // CORS middleware options
 const corsOptions = {
   origin: function (origin, callback) {
