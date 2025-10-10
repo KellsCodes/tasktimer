@@ -348,14 +348,18 @@ export const loginWithGoogleCallback = async (
       username: user.username,
     });
 
-    const cookieOption = {
-      httpOnly: process.env.NODE_ENV === "production" && true,
-      secure: process.env.NODE_ENV === "production" && true,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    };
-    res.cookie("accessToken", accessToken, cookieOption);
-    res.cookie("refreshToken", refreshToken, cookieOption);
+    /** THIS OPTION IS USED FOR SAME DOMAIN API
+     * 
+      const cookieOption = {
+        httpOnly: process.env.NODE_ENV === "production" && true,
+        secure: process.env.NODE_ENV === "production" && true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      };
+      res.cookie("accessToken", accessToken, cookieOption);
+      res.cookie("refreshToken", refreshToken, cookieOption);
+     */
+
     // Save refresh token in DB for invalidation support
     await createToken({
       data: {
@@ -376,11 +380,23 @@ export const loginWithGoogleCallback = async (
       userId: user.id,
     });
 
+    // Redirect to Next.js API route to set the cookies(because of cors)
+    const nextApiUrl = new URL(
+      `${process.env.FRONTEND_URL}api/auth/callback`
+    );
+    nextApiUrl.searchParams.append("accessToken", accessToken);
+    nextApiUrl.searchParams.append("refreshToken", refreshToken);
+
+    res.redirect(nextApiUrl.toString());
+
+    /**
+     * 
     if (lastItem === "/") {
       res.redirect(`${process.env.FRONTEND_URL}dashboard`);
     } else {
       res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
     }
+     */
   } catch (error) {
     console.log("Error:", error);
     return res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);

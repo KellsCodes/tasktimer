@@ -97,5 +97,6 @@ export const loginWithGoogleController = (req, res) => {
 export const loginWithGoogleCallbackController = async (req, res) => {
   const { code, state } = req.query;
   const stateCookie = req.cookies.oauth_state;
+  console.log({ state, stateCookie });
   await loginWithGoogleCallback(res, code, state, stateCookie);
 };
