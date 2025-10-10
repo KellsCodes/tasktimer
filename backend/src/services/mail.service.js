@@ -3,17 +3,22 @@ import ejs from "ejs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { Resend } from "resend";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const attachments = [
-  {
-    filename: "logo.webp",
-    path: join(__dirname, "../../public/main-logo.webp"),
-    cid: "appLogo",
-  },
-];
+// const logoPath = join(__dirname, "../../public/main-logo.webp");
+// const logoBase64 = fs.readFileSync(logoPath).toString("base64");
+
+// const attachments = [
+//   {
+//     filename: "logo.webp",
+//     content: logoBase64,
+//     cid: "appLogo",
+//   },
+// ];
 
 export const sendAuthActionEmail = async (user, token, type) => {
   let message, subject, url, btnText; // type ===> 1 for email verification email, 2 for password reset email
@@ -34,19 +39,35 @@ export const sendAuthActionEmail = async (user, token, type) => {
     const mailBody = await ejs.renderFile(
       path.join(__dirname, "../utils/templates/authEmailTemplate.ejs"),
       {
-        data: { url, name: user?.profile?.firstname || user.username, message, btnText },
+        data: {
+          url,
+          name: user?.profile?.firstname || user.username,
+          message,
+          btnText,
+          logoURI: process.env.LOGO_URI,
+          domain: process.env.FRONTEND_URL
+        },
       },
       {
         async: true,
       }
     );
-    await transporter.sendMail({
-      from: { name: "Time.it", email: `timeitemail@gmail.com` },
+    const mailData = {
       to: user.email,
       subject,
       html: mailBody,
-      attachments,
-    });
+      // attachments,
+    };
+    if (process.env.NODE_ENV === "development") {
+      const from = { name: "Time.it", email: `timeitemail@gmail.com` };
+      await transporter.sendMail({ from, ...mailData });
+    } else {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const from = "onboarding@resend.dev";
+      const { data, error } = await resend.emails.send({ from, ...mailData });
+      // console.log(error, { data });
+    }
+    console.log("mail sending completed");
   } catch (error) {
     console.log(error);
   }
