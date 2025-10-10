@@ -293,7 +293,9 @@ export const loginWithGoogleCallback = async (
           data: {
             googleId: infoRes.sub,
             provider: "google",
-            verifiedAt: new Date(),
+            verifiedAt: !user.verifiedAt
+              ? new Date()
+              : new Date(user.verifiedAt),
             profile: {
               upsert: {
                 update: profileData,
@@ -371,12 +373,6 @@ export const loginWithGoogleCallback = async (
 
     // Clear state cookie and redirect to frontend
     res.clearCookie("oauth_state");
-
-    console.log({
-      accessToken,
-      refreshToken,
-      userId: user.id,
-    });
 
     // Redirect to Next.js API route to set the cookies(because of cors)
     const url = `${process.env.FRONTEND_URL}api/auth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}`;
