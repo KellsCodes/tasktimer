@@ -371,9 +371,7 @@ export const loginWithGoogleCallback = async (
 
     // Clear state cookie and redirect to frontend
     res.clearCookie("oauth_state");
-    console.log("url: ", `${process.env.FRONTEND_URL}dashboard`);
-    const lastItem = process.env.FRONTEND_URL.slice(-1);
-    console.log("lastitem: ", lastItem);
+
     console.log({
       accessToken,
       refreshToken,
@@ -381,13 +379,8 @@ export const loginWithGoogleCallback = async (
     });
 
     // Redirect to Next.js API route to set the cookies(because of cors)
-    const nextApiUrl = new URL(
-      `${process.env.FRONTEND_URL}api/auth/callback`
-    );
-    nextApiUrl.searchParams.append("accessToken", accessToken);
-    nextApiUrl.searchParams.append("refreshToken", refreshToken);
-
-    res.redirect(nextApiUrl.toString());
+    const url = `${process.env.FRONTEND_URL}api/auth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}`;
+    res.redirect(url);
 
     /**
      * 
