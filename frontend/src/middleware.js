@@ -13,7 +13,10 @@ const PRIVATE_ROUTES = ["/dashboard", "/settings"];
 export function middleware(req) {
   const url = req.nextUrl.clone();
   const { pathname } = url;
-
+  
+  if (pathname.startsWith("/api/auth/callback")) {
+    return NextResponse.next();
+  }
   // read cookie safely
   const rawCookie = req.cookies.get("accessToken");
   const token =

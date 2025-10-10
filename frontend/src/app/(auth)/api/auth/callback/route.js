@@ -18,14 +18,14 @@ export async function GET(request) {
     cookieStore.set('accessToken', accessToken, {
       httpOnly: false,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       path: '/',
     });
     cookieStore.set('refreshToken', refreshToken, {
       httpOnly: false,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',
     });
